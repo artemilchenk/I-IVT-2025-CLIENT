@@ -15,27 +15,24 @@ function App() {
         <Route path="sign-in" element={<LoginPage />} />
       </Route>
 
-      <Route path="/" element={<AuthLayout />}>
-        <Route
-          path="galleries"
-          element={
-            <AuthProtectedRoute>
-              <GalleriesPage />
-            </AuthProtectedRoute>
-          }
-        />
+      <Route
+        path="/galleries"
+        element={
+          <AuthProtectedRoute>
+            <GalleriesPage />
+          </AuthProtectedRoute>
+        }
+      />
 
-        <Route
-          path="profile"
-          element={
-            <AuthProtectedRoute>
-              <ProfilePage />
-            </AuthProtectedRoute>
-          }
-        />
-
-        <Route path="*" element={<Navigate to="/auth/sign-up" replace />} />
-      </Route>
+      <Route
+        path="/profile"
+        element={
+          <AuthProtectedRoute>
+            <ProfilePage />
+          </AuthProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/profile" replace />} />
     </Routes>
   );
 }
