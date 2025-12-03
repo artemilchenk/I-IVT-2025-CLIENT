@@ -3,7 +3,6 @@ import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
 import type { VariantProps } from "class-variance-authority";
 import { buttonVariants } from "@/constants/style";
-import { useAuth } from "@/modules/auth/context.ts";
 
 export const BaseButton = ({
   className,
@@ -15,15 +14,10 @@ export const BaseButton = ({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
   }) => {
-  const { signOut } = useAuth();
-
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
-      onClick={() => {
-        signOut();
-      }}
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
