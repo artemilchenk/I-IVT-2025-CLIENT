@@ -2,12 +2,20 @@ import { BaseButton } from "@/components/ui/Button.tsx";
 import { NavDesktop } from "@/router/component/NavDesktop.tsx";
 import { useAuth } from "@/modules/auth/context.ts";
 import { Menu, X } from "lucide-react";
+import { DrawerType } from "@/constants/drawer.ts";
+import { DrawerService } from "@/features/drawer/service";
 import { useDrawer } from "@/features/drawer/store";
+import { useMemo } from "react";
 
 export const HeaderComponent = () => {
   const { getUserData, signOut } = useAuth();
   const userData = getUserData();
-  const { isDrawer, toggleDrawer } = useDrawer();
+
+  const drawerStore = useDrawer();
+  const drawerService = useMemo(
+    () => new DrawerService(drawerStore),
+    [drawerStore],
+  );
 
   return (
     <header className="relative flex w-full bg-white shadow-md px-6 py-3">
@@ -17,9 +25,19 @@ export const HeaderComponent = () => {
         </div>
 
         <div className="block md:hidden">
-          <BaseButton onClick={() => toggleDrawer()}>
-            {isDrawer ? <X /> : <Menu />}
-          </BaseButton>
+          {drawerService.checkDrawer(DrawerType.NAV) ? (
+            <BaseButton
+              onClick={() => drawerService.closeDrawer(DrawerType.NAV)}
+            >
+              <X />
+            </BaseButton>
+          ) : (
+            <BaseButton
+              onClick={() => drawerService.openDrawer(DrawerType.NAV)}
+            >
+              <Menu />
+            </BaseButton>
+          )}
         </div>
       </div>
       {userData?.user && (

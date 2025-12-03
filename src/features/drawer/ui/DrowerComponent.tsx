@@ -12,7 +12,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, FullWidthSheetProps>(
       <>
         {/* Backdrop */}
         <div
-          className={`absolute h-full bg-black/50 transition-opacity duration-300 ${
+          className={`absolute z-50 h-full bg-black/50 transition-opacity duration-300 ${
             isOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
@@ -23,8 +23,8 @@ export const DrawerComponent = forwardRef<HTMLDivElement, FullWidthSheetProps>(
         {/* Sheet content */}
         <div
           ref={ref}
-          className={`absolute top-0 left-0 h-full w-full bg-gray-400 shadow-xl transform transition-transform duration-300 ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
+          className={`absolute top-0 left-0 h-full w-full bg-gray-400 transform transition-transform duration-300 ${
+            isOpen ? "translate-x-0" : "-translate-x-[calc(100%+1px)]"
           }`}
         >
           {children}
