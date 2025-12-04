@@ -1,7 +1,7 @@
 import type {
+  SignInData,
+  SignUpData,
   SignUpResponseData,
-  User,
-  UserCore,
 } from "@/modules/auth/types.ts";
 import { httpClient } from "@/services/httpClient.ts";
 import axios from "axios";
@@ -9,7 +9,7 @@ import axios from "axios";
 export class AuthService {
   constructor() {}
 
-  async signUp(value: User): Promise<SignUpResponseData> {
+  async signUp(value: SignUpData): Promise<SignUpResponseData> {
     const response = await axios.post<SignUpResponseData>(
       `${httpClient.baseUrl}/auth/sign-up`,
       value,
@@ -18,7 +18,7 @@ export class AuthService {
     return response.data;
   }
 
-  async signIn(value: UserCore): Promise<SignUpResponseData> {
+  async signIn(value: SignInData): Promise<SignUpResponseData> {
     const response = await axios.post<SignUpResponseData>(
       `${httpClient.baseUrl}/auth/sign-in`,
       value,

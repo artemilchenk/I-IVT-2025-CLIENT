@@ -1,4 +1,4 @@
-import { type FC, useMemo, useRef } from "react";
+import { type FC, useMemo } from "react";
 import { HeaderComponent } from "@/components/Header/Component.tsx";
 import { Outlet } from "react-router";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
@@ -6,6 +6,7 @@ import { useDrawer } from "@/features/drawer/store";
 import { NavMobile } from "@/router/component/NavMobile.tsx";
 import { DrawerService } from "@/features/drawer/service";
 import { DrawerType } from "@/constants/drawer.ts";
+import { Toaster } from "sonner";
 
 export const AppLayout: FC = () => {
   const drawerStore = useDrawer();
@@ -17,8 +18,8 @@ export const AppLayout: FC = () => {
   return (
     <div className={"h-full overflow-hidden "}>
       <HeaderComponent />
-
       <div className="relative flex flex-col w-full h-full items-center p-2">
+        <Toaster position="top-right" richColors />
         <Outlet />
         <div className={"md:hidden"}>
           <DrawerComponent

@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { BaseButton } from "@/components/ui/Button.tsx";
+import { Button } from "@/components/ui/Button.tsx";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/constants/router.ts";
 
@@ -13,9 +13,7 @@ export const NotFoundPage: FC = () => {
         The page you are looking for does not exist.
       </p>
 
-      <BaseButton onClick={() => navigate(ROUTES.HOME.path)}>
-        Go Home
-      </BaseButton>
+      <Button onClick={() => navigate(ROUTES.HOME.path)}>Go Home</Button>
     </div>
   );
 };

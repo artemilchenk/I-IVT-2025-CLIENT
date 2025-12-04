@@ -1,12 +1,12 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
-import { BaseButton } from "@/components/ui/Button.tsx";
+import { Button } from "@/components/ui/Button.tsx";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { useDrawer } from "@/features/drawer/store";
 import { DrawerType } from "@/constants/drawer.ts";
 import { DrawerService } from "@/features/drawer/service";
 import { useMemo } from "react";
+import { AvatarIcon } from "@/components/ui/User.tsx";
 
 export const ProfilePage = () => {
   const profile = {
@@ -31,24 +31,17 @@ export const ProfilePage = () => {
       <CardHeader className={"flex justify-between"}>
         <CardTitle className="text-lg">Profile</CardTitle>
         <div>
-          <BaseButton
+          <Button
             onClick={() => drawerService.openDrawer(DrawerType.EDIT_PROFILE)}
             size={"sm"}
           >
             Edit
-          </BaseButton>
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center gap-6">
-          <Avatar className="w-28 h-28">
-            {profile.avatar ? (
-              <AvatarImage src={profile.avatar} alt="Avatar" />
-            ) : (
-              <AvatarFallback className="text-xl">JD</AvatarFallback>
-            )}
-          </Avatar>
-
+          <AvatarIcon />
           <div className="w-full grid grid-cols-1 gap-4 text-center">
             <div>
               <Label className="text-muted-foreground text-sm grid text-center">

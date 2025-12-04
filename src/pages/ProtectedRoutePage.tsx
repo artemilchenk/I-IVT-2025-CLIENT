@@ -1,11 +1,17 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "@/modules/auth/context.ts";
+import { useEffect } from "react";
 
 export const AuthProtectedRoute = () => {
-  const { getUserData } = useAuth();
-  const userData = getUserData();
+  const { fetchUser, user } = useAuth();
 
-  if (!userData?.user) return <Navigate to="/auth/sign-in" replace />;
+  useEffect(() => {
+    const test = async () => {
+      await fetchUser();
+      if (!user) return <Navigate to="/auth/sign-in" replace />;
+    };
+    test();
+  }, []);
 
   return <Outlet />;
 };
