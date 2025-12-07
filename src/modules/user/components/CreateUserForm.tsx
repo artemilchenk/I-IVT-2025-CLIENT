@@ -24,10 +24,11 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/Button.tsx";
 import { signUpSchema } from "@/modules/auth/schema.ts";
-import { userFormControls } from "@/mocks/user/userForm.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/modules/auth/context.ts";
 import type { SignUpData } from "@/modules/auth/types.ts";
+import { userCreateFormControls } from "@/mocks/user/userForm.ts";
+import { handleError } from "@/sheared";
 
 export const CreateUserForm = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -52,13 +53,12 @@ export const CreateUserForm = (): React.ReactElement => {
   const mutation = useMutation({
     mutationFn: signUp,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Authorised!");
       navigate("/galleries", { replace: true });
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
-      console.error("Error creating user:", error.message);
+      handleError(error, "Create user error");
     },
   });
 
@@ -69,7 +69,7 @@ export const CreateUserForm = (): React.ReactElement => {
       </CardHeader>
       <CardContent>
         <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-          {userFormControls.map((user) => (
+          {userCreateFormControls.map((user) => (
             <FieldGroup key={user.id}>
               <Controller
                 name={user.name}

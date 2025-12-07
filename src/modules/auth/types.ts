@@ -1,11 +1,9 @@
 import { z } from "zod";
 import { signInSchema, signUpSchema } from "@/modules/auth/schema.ts";
-import type { UpdateUserData } from "@/modules/user/types.ts";
-
-export interface UserCore {
-  email: string;
-  password: string;
-}
+import type {
+  UpdateUserDataBase,
+  UpdateUserDataFull,
+} from "@/modules/user/types.ts";
 
 export interface SignUpUserResponse {
   id: string;
@@ -15,12 +13,15 @@ export interface SignUpUserResponse {
 }
 
 export interface AuthContextType {
-  user: SignUpUserResponse | null;
-  signUp: (value: SignUpData) => void;
-  signIn: (value: SignInData) => void;
+  signUp: (value: SignUpData) => Promise<SignUpUserResponse>;
+  signIn: (value: SignInData) => Promise<SignUpUserResponse>;
+  updateUser: (
+    value: UpdateUserDataFull | UpdateUserDataBase,
+  ) => Promise<SignUpUserResponse>;
   signOut: () => void;
-  fetchUser: () => void;
-  updateUser: (value: UpdateUserData) => void;
+  fetchUser: () => Promise<SignUpUserResponse>;
+  isLoading: boolean;
+  user: SignUpUserResponse | undefined;
 }
 
 export interface SignUpResponseData {

@@ -26,6 +26,8 @@ import { loginFormControls } from "@/mocks/user/userForm.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/modules/auth/context.ts";
 import type { SignInData } from "@/modules/auth/types.ts";
+import { ROUTES } from "@/constants/router.ts";
+import { handleError } from "@/sheared";
 
 export const LoginForm = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -47,13 +49,12 @@ export const LoginForm = (): React.ReactElement => {
   const mutation = useMutation({
     mutationFn: signIn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast.success("Authorised!");
-      navigate("/galleries", { replace: true });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      navigate(ROUTES.PROFILE.path, { replace: true });
+      toast.success("Signed In!");
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
-      console.error("Error creating user:", error.message);
+      handleError(error, "Sign In error");
     },
   });
 
@@ -98,13 +99,16 @@ export const LoginForm = (): React.ReactElement => {
           <Button type="button" onClick={() => form.reset()}>
             Reset
           </Button>
-          <Button type="submit" form="form-rhf-demo">
+          <Button
+            type="submit"
+            disabled={mutation.isPending}
+            form="form-rhf-demo"
+          >
             Sign In
           </Button>
         </Field>
         <Field orientation="horizontal">
           <Button
-            disabled={mutation.isPending}
             onClick={() => navigate("/auth/sign-up", { replace: true })}
             className={"w-full"}
           >

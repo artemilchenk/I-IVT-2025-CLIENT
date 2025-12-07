@@ -1,7 +1,10 @@
 import type { SignUpUserResponse } from "@/modules/auth/types.ts";
 import { httpClient } from "@/services/httpClient.ts";
 import axios from "axios";
-import type { UpdateUserData } from "@/modules/user/types.ts";
+import type {
+  UpdateUserDataBase,
+  UpdateUserDataFull,
+} from "@/modules/user/types.ts";
 
 export class UserService {
   constructor() {}
@@ -20,10 +23,12 @@ export class UserService {
     return response.data;
   }
 
-  async updateUser(dto: UpdateUserData): Promise<SignUpUserResponse> {
+  async updateUser(
+    dto: UpdateUserDataFull | UpdateUserDataBase,
+  ): Promise<SignUpUserResponse> {
     const token = localStorage.getItem("token");
 
-    const response = await axios.patch<SignUpUserResponse>(
+    const response = await axios.post<SignUpUserResponse>(
       `${httpClient.baseUrl}/profile`,
       dto,
       {

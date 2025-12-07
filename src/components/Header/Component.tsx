@@ -6,9 +6,12 @@ import { DrawerService } from "@/features/drawer/service";
 import { useDrawer } from "@/features/drawer/store";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/Button.tsx";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const HeaderComponent = () => {
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
+  const queryClient = useQueryClient();
+  const user = queryClient.getQueryData(["profile"]);
 
   const drawerStore = useDrawer();
   const drawerService = useMemo(
@@ -35,9 +38,9 @@ export const HeaderComponent = () => {
           )}
         </div>
       </div>
-      {!user && (
+      {!!user && (
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <Button onClick={() => signOut()}>Sign Out</Button>
+          {user && <Button onClick={() => signOut()}>Sign Out</Button>}
         </div>
       )}
     </header>

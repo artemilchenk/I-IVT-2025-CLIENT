@@ -1,15 +1,19 @@
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode } from "react";
 import type {
   SignInData,
   SignUpData,
-  SignUpResponseData,
   SignUpUserResponse,
 } from "@/modules/auth/types.ts";
 import { AuthContext } from "./context";
 import { authService } from "@/modules/auth/service.ts";
 import { useNavigate } from "react-router";
-import { userService } from "@/modules/user/service.ts";
-import type { UpdateUserData } from "@/modules/user/types.ts";
+import { userService } from "@/modules/user/service";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type {
+  UpdateUserDataBase,
+  UpdateUserDataFull,
+} from "@/modules/user/types.ts";
+import { ROUTES } from "@/constants/router.ts";
 
 interface Props {
   children: ReactNode;
@@ -17,39 +21,58 @@ interface Props {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<SignUpUserResponse | null>(null);
+  const queryClient = useQueryClient();
 
-  const setAuth = (response: SignUpResponseData) => {
-    localStorage.setItem("token", response.access_token);
-    setUser(response.user);
+  const fetchUser = async () => {
+    return await userService.getUser();
+  };
+
+  const { isLoading, data: user } = useQuery<SignUpUserResponse>({
+    queryKey: ["profile"],
+    queryFn: fetchUser,
+    retry: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+
+  const tokenToStorage = (token: string) => {
+    localStorage.setItem("token", token);
   };
 
   const signUp = async (value: SignUpData) => {
     const response = await authService.signUp(value);
-    setAuth(response);
+    tokenToStorage(response.access_token);
+    return response.user;
   };
   const signIn = async (value: SignInData) => {
     const response = await authService.signIn(value);
-    setAuth(response);
+    tokenToStorage(response.access_token);
+
+    return response.user;
   };
-  const signOut = () => {
+  const signOut = async () => {
     localStorage.removeItem("token");
-    navigate("/auth/sign-in", { replace: true });
+    await queryClient.setQueryData(["profile"], null);
+    navigate(ROUTES.AUTH.SIGN_IN.path, { replace: true });
   };
 
-  const fetchUser = async () => {
-    const response = await userService.getUser();
-    setUser(response);
-  };
-
-  const updateUser = async (dto: UpdateUserData) => {
-    const response = await userService.updateUser(dto);
-    setUser(response);
+  const updateUser = async (dto: UpdateUserDataFull | UpdateUserDataBase) => {
+    return await userService.updateUser(dto);
   };
 
   return (
     <AuthContext.Provider
-      value={{ signUp, signIn, signOut, fetchUser, updateUser, user }}
+      value={{
+        signUp,
+        signIn,
+        signOut,
+        fetchUser,
+        updateUser,
+        isLoading,
+        user,
+      }}
     >
       {children}
     </AuthContext.Provider>
