@@ -27,7 +27,8 @@ export const useGalleryCreate = () => {
         ...(galleryClient.getGalleriesData() || []),
         data,
       ]);
-      drawerService.closeDrawer(DrawerType.GALLERY_INFO);
+      mutation.reset();
+      drawerService.closeDrawer(DrawerType.CREATE_GALLERY);
       toast.success("New gallery successfully created!");
     },
     onError: (error) => {
