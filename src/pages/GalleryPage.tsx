@@ -43,18 +43,7 @@ export function GalleryPage() {
             <ImagePlaceholder />
 
             <div className="absolute right-2 top-2 flex gap-2">
-              {drawerService.checkDrawer(DrawerType.GALLERY_INFO) ? (
-                <Button
-                  onClick={() => {
-                    drawerService.closeDrawer(DrawerType.GALLERY_INFO);
-                  }}
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 rounded-full hover:bg-muted"
-                >
-                  <X className=" h-4 w-4 stroke-[1.7] text-white" />
-                </Button>
-              ) : (
+              {!drawerService.checkDrawer(DrawerType.GALLERY_INFO) && (
                 <Button
                   onClick={() => {
                     drawerService.openDrawer(DrawerType.GALLERY_INFO);
@@ -70,7 +59,7 @@ export function GalleryPage() {
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6 pt-6">
+        <CardContent className=" space-y-6 pt-6">
           <DrawerComponent
             isOpen={!!drawerService.checkDrawer(DrawerType.GALLERY_INFO)}
             onClose={() => drawerService.closeDrawer(DrawerType.GALLERY_INFO)}

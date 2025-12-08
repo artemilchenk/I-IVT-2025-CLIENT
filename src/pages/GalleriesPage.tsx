@@ -6,7 +6,7 @@ import { DrawerService } from "@/features/drawer/service";
 import { DrawerType } from "@/constants/drawer.ts";
 
 export const GalleriesPage = () => {
-  const { isLoading, galleries } = useFetchGalleries();
+  const { isLoading } = useFetchGalleries();
 
   const drawerStore = useDrawer();
   const drawerService = useMemo(
