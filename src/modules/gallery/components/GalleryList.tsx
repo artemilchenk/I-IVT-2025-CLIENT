@@ -23,13 +23,15 @@ export const GalleryList = () => {
   if (!galleries) return null;
 
   return (
-    <div className=" w-full  relative grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className=" w-full m relative grid grid-cols-1 sm:grid-cols-2 gap-4">
       <DrawerComponent
         isOpen={!!drawerService.checkDrawer(DrawerType.CREATE_GALLERY)}
         onClose={() => drawerService.closeDrawer(DrawerType.CREATE_GALLERY)}
       >
         <div
-          className={"flex justify-center w-full overflow-scroll h-full p-2"}
+          className={
+            "flex justify-center w-full min-h-200 overflow-scroll h-full p-2"
+          }
         >
           <div className={"w-1/2"}>
             <GalleryCreateForm />
