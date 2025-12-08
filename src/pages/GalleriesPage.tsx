@@ -16,8 +16,6 @@ export const GalleriesPage = () => {
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!galleries?.length) return <div>There is no any gallery here.</div>;
-
   return (
     <div className="w-full p-6 max-w-4xl mx-auto">
       <button
