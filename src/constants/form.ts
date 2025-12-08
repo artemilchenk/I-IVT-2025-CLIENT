@@ -1,5 +1,9 @@
+import type { FormSchema, TFormType } from "@/features/form/types.ts";
+
 export const FormType = {
-  LOGIN: "login",
-  CREATE_USER: "createUser",
-  UPDATE_USER: "updateUser",
+  GALLERY: "gallery",
 } as const;
+
+export const FormMap: Record<TFormType, FormSchema> = {
+  [FormType.GALLERY]: { type: FormType.GALLERY, mode: "create" },
+};

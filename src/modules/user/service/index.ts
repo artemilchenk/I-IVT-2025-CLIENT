@@ -10,7 +10,7 @@ export class UserService {
   constructor() {}
 
   async getUser(): Promise<SignUpUserResponse> {
-    const token = localStorage.getItem("token"); // or your Zustand store
+    const token = localStorage.getItem("token");
 
     const response = await axios.get<SignUpUserResponse>(
       `${httpClient.baseUrl}/profile`,

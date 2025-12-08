@@ -15,10 +15,11 @@ export const AppLayout: FC = () => {
   );
 
   return (
-    <div className={"h-full overflow-hidden "}>
+    <div className={"h-full overflow-hidden"}>
       <HeaderComponent />
       <div className="relative flex flex-col w-full h-full items-center p-2">
         <Outlet />
+
         <div className={"md:hidden"}>
           <DrawerComponent
             isOpen={!!drawerService.checkDrawer(DrawerType.NAV)}

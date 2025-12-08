@@ -14,7 +14,7 @@ export const AuthGuardPage = () => {
   }, [user, navigate]);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return <Outlet />;

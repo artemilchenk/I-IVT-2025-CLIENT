@@ -9,5 +9,7 @@ export const ROUTES = {
 
   PROFILE: route("/profile"),
   GALLERIES: route("/galleries"),
+  GALLERY_ID: (id: string) => route(`/gallery/${id}`),
+  GALLERY: route("/gallery/:id"),
   HOME: route("/"),
 } as const;

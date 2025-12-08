@@ -23,9 +23,9 @@ export const ProfilePage = () => {
         onClose={() => drawerService.closeDrawer(DrawerType.EDIT_PROFILE)}
       >
         <div
-          className={"flex justify-center w-full overflow-scroll h-full p-2"}
+          className={"flex  justify-center w-full overflow-scroll h-full p-2"}
         >
-          <div className={"w-1/2"}>
+          <div className={"w-1/2 "}>
             <UpdateUserForm />
           </div>
         </div>
