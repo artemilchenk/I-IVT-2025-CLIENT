@@ -26,10 +26,14 @@ import { DrawerType } from "@/constants/drawer.ts";
 import { useParams } from "react-router";
 import { useGalleryUpdate } from "@/modules/gallery/hooks/useGalleryUpdate.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const GalleryUpdateForm = (): React.ReactElement => {
   const { isLoading, mutation } = useGalleryUpdate();
   const { id } = useParams();
+  const queryClient = useQueryClient();
+  const galleryItem = queryClient.getQueryData<TBaseGallery>(["gallery", id]);
 
   const form = useForm<z.infer<typeof baseGallerySchema>>({
     resolver: zodResolver(baseGallerySchema),
@@ -45,6 +49,15 @@ export const GalleryUpdateForm = (): React.ReactElement => {
     if (!id) return;
     mutation.mutate({ dto, id });
   };
+
+  useEffect(() => {
+    if (galleryItem) {
+      form.reset({
+        title: galleryItem.title || "",
+        description: galleryItem.description || "",
+      });
+    }
+  }, [galleryItem, form]);
 
   return (
     <Card className="w-full sm:max-w-md">
