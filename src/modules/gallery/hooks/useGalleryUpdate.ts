@@ -6,19 +6,14 @@ import type {
   IGalleryCreateResponse,
   TBaseGallery,
 } from "@/modules/gallery/types.ts";
-import { useDrawer } from "@/features/drawer/store";
-import { useMemo } from "react";
-import { DrawerService } from "@/features/drawer/service";
+
 import { DrawerType } from "@/constants/drawer.ts";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export const useGalleryUpdate = () => {
   const queryClient = useQueryClient();
   const galleryClient = useGalleryClient(queryClient);
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   const mutation = useMutation<
     IGalleryCreateResponse,

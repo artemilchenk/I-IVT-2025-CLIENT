@@ -1,26 +1,20 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Edit, Loader, X } from "lucide-react";
+import { ArrowLeft, Edit, Loader } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/Button.tsx";
 import { useFetchGallery } from "@/modules/gallery/hooks/useFetchGallery.ts";
 import ImagePlaceholder from "@/components/ImagePlaceholder.tsx";
-import { useMemo } from "react";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { DrawerType } from "@/constants/drawer.ts";
-import { useDrawer } from "@/features/drawer/store";
-import { DrawerService } from "@/features/drawer/service";
 import { GalleryUpdateForm } from "@/modules/gallery/components/GaleryUpdateForm.tsx";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export function GalleryPage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   const { isLoading, gallery } = useFetchGallery(id || "");
 
@@ -39,7 +33,7 @@ export function GalleryPage() {
 
       <Card className="relative flex overflow-hidden shadow-md rounded-2xl">
         <CardHeader>
-          <div className="relative flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <ImagePlaceholder />
 
             <div className="absolute right-2 top-2 flex gap-2">
@@ -59,12 +53,14 @@ export function GalleryPage() {
           </div>
         </CardHeader>
 
-        <CardContent className=" space-y-6 pt-6">
+        <CardContent className="space-y-6 pt-6">
           <DrawerComponent
             isOpen={!!drawerService.checkDrawer(DrawerType.GALLERY_INFO)}
             onClose={() => drawerService.closeDrawer(DrawerType.GALLERY_INFO)}
           >
-            <GalleryUpdateForm />
+            <div className="flex w-full h-full justify-center items-center">
+              <GalleryUpdateForm />
+            </div>
           </DrawerComponent>
 
           {/* Title */}

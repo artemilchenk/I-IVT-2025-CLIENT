@@ -2,22 +2,16 @@ import { NavDesktop } from "@/router/component/NavDesktop.tsx";
 import { useAuth } from "@/modules/auth/context.ts";
 import { Menu, X } from "lucide-react";
 import { DrawerType } from "@/constants/drawer.ts";
-import { DrawerService } from "@/features/drawer/service";
-import { useDrawer } from "@/features/drawer/store";
-import { useMemo } from "react";
 import { Button } from "@/components/ui/Button.tsx";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export const HeaderComponent = () => {
   const { signOut } = useAuth();
   const queryClient = useQueryClient();
   const user = queryClient.getQueryData(["profile"]);
 
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   return (
     <header className="relative flex w-full bg-white shadow-md px-6 py-3">

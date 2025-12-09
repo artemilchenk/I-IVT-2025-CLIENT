@@ -22,12 +22,10 @@ import { Button } from "@/components/ui/Button.tsx";
 import { baseGallerySchema } from "@/modules/gallery/schema.ts";
 import type { TBaseGallery } from "@/modules/gallery/types.ts";
 import { galleryPutFormControls } from "@/mocks/gallery/galleryForm.ts";
-import { useDrawer } from "@/features/drawer/store";
-import { useMemo } from "react";
-import { DrawerService } from "@/features/drawer/service";
 import { DrawerType } from "@/constants/drawer.ts";
 import { useParams } from "react-router";
 import { useGalleryUpdate } from "@/modules/gallery/hooks/useGalleryUpdate.ts";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export const GalleryUpdateForm = (): React.ReactElement => {
   const { isLoading, mutation } = useGalleryUpdate();
@@ -41,11 +39,7 @@ export const GalleryUpdateForm = (): React.ReactElement => {
     },
   });
 
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   const onSubmit = (dto: TBaseGallery) => {
     if (!id) return;

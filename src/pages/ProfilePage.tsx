@@ -1,20 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/Button.tsx";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
-import { useDrawer } from "@/features/drawer/store";
 import { DrawerType } from "@/constants/drawer.ts";
-import { DrawerService } from "@/features/drawer/service";
-import { useMemo } from "react";
 import { AvatarIcon } from "@/components/ui/User.tsx";
 import { UpdateUserForm } from "@/modules/user/components/UpdateUserForm.tsx";
 import { ProfileInfoPage } from "@/components/ProfileInfoPage.tsx";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export const ProfilePage = () => {
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   return (
     <Card className={"w-2/3 max-w-3xl relative overflow-hidden"}>

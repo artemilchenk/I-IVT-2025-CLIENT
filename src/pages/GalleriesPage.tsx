@@ -26,9 +26,7 @@ export const GalleriesPage = () => {
       >
         Add Item
       </button>
-      <div
-        className={"flex h-[calc(100vh-150px)] overflow-scroll flex-col pb-5"}
-      >
+      <div className={"flex h-[calc(100vh-150px)] flex-col pb-5"}>
         <GalleryList />
       </div>
     </div>

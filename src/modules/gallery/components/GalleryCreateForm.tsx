@@ -23,10 +23,9 @@ import { baseGallerySchema } from "@/modules/gallery/schema.ts";
 import { useGalleryCreate } from "@/modules/gallery/hooks/useGalleryCreate.ts";
 import type { TBaseGallery } from "@/modules/gallery/types.ts";
 import { galleryPutFormControls } from "@/mocks/gallery/galleryForm.ts";
-import { useDrawer } from "@/features/drawer/store";
-import { useMemo } from "react";
-import { DrawerService } from "@/features/drawer/service";
+
 import { DrawerType } from "@/constants/drawer.ts";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export const GalleryCreateForm = (): React.ReactElement => {
   const { isLoading, mutation } = useGalleryCreate();
@@ -39,18 +38,15 @@ export const GalleryCreateForm = (): React.ReactElement => {
     },
   });
 
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   const onSubmit = (formData: TBaseGallery) => {
     mutation.mutate(formData);
+    form.reset();
   };
 
   return (
-    <Card className="w-full sm:max-w-md">
+    <Card className={"w-full"}>
       <CardHeader>
         <CardTitle>Create Gallery</CardTitle>
       </CardHeader>

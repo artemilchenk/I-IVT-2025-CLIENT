@@ -2,17 +2,12 @@ import { type FC, useMemo } from "react";
 import { HeaderComponent } from "@/components/Header/Component.tsx";
 import { Outlet } from "react-router";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
-import { useDrawer } from "@/features/drawer/store";
 import { NavMobile } from "@/router/component/NavMobile.tsx";
-import { DrawerService } from "@/features/drawer/service";
 import { DrawerType } from "@/constants/drawer.ts";
+import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
 export const AppLayout: FC = () => {
-  const drawerStore = useDrawer();
-  const drawerService = useMemo(
-    () => new DrawerService(drawerStore),
-    [drawerStore],
-  );
+  const drawerService = useDrawerService();
 
   return (
     <div className={"h-full overflow-hidden"}>
