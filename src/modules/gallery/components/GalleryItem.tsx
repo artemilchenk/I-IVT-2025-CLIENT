@@ -26,7 +26,7 @@ export const GalleryItem: FC<Props> = ({ item }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.85 }}
       transition={{ duration: 0.25 }}
-      className="p-4 bg-white shadow rounded-2xl border border-gray-100 hover:shadow-md transition cursor-pointer"
+      className="p-4 shadow rounded-2xl border border-gray-100 hover:shadow-md transition cursor-pointer"
     >
       <DrawerComponent
         index={DrawerIndexes.GALLERY_DELETE}

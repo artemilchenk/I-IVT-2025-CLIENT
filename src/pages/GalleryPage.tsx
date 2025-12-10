@@ -18,8 +18,6 @@ export function GalleryPage() {
 
   const { isLoading, gallery } = useFetchGallery(id || "");
 
-  console.log({ gallery });
-
   if (isLoading) return <Loader />;
 
   return (

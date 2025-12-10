@@ -55,7 +55,7 @@ export const GalleryList = () => {
       </div>
 
       <div
-        className={`w-full relative h-fit grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-${isDrover ? "hidden" : "scroll"}`}
+        className={`w-full grid items-center justify-center  grid-cols-1 sm:grid-cols-2 gap-4 h-[calc(100vh-220px)] overflow-${isDrover ? "hidden" : "scroll"}`}
       >
         <AnimatePresence>
           {visibleGalleries?.map((item) => (
