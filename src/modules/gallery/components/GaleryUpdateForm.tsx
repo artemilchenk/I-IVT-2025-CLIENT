@@ -62,7 +62,7 @@ export const GalleryUpdateForm = (): React.ReactElement => {
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>Create Gallery</CardTitle>
+        <CardTitle>Update Gallery</CardTitle>
       </CardHeader>
       <CardContent>
         <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>

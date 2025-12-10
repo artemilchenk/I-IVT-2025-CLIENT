@@ -5,6 +5,7 @@ import type {
   TBaseGallery,
 } from "@/modules/gallery/types.ts";
 import type { QueryClient } from "@tanstack/react-query";
+import { tokenService } from "@/services/tokenService.ts";
 
 export class GalleryClient {
   private queryClient: QueryClient;
@@ -13,8 +14,12 @@ export class GalleryClient {
     this.queryClient = queryClient;
   }
 
+  getToken() {
+    return localStorage.getItem("token");
+  }
+
   async deleteGallery(id: string): Promise<{ id: string }> {
-    const token = localStorage.getItem("token");
+    const token = tokenService.getToken();
 
     const response = await axios.delete(`${httpClient.baseUrl}/gallery/${id}`, {
       headers: {
@@ -25,7 +30,7 @@ export class GalleryClient {
   }
 
   async createGallery(dto: TBaseGallery) {
-    const token = localStorage.getItem("token");
+    const token = tokenService.getToken();
 
     const response = await axios.post<IGalleryCreateResponse>(
       `${httpClient.baseUrl}/gallery`,
@@ -47,7 +52,7 @@ export class GalleryClient {
     dto: TBaseGallery;
     id: string;
   }): Promise<IGalleryCreateResponse> {
-    const token = localStorage.getItem("token");
+    const token = tokenService.getToken();
 
     const response = await axios.post<IGalleryCreateResponse>(
       `${httpClient.baseUrl}/gallery/${id}`,
@@ -62,7 +67,7 @@ export class GalleryClient {
   }
 
   async fetchGalleries(): Promise<IGalleryCreateResponse[]> {
-    const token = localStorage.getItem("token");
+    const token = tokenService.getToken();
 
     const response = await axios.get<IGalleryCreateResponse[]>(
       `${httpClient.baseUrl}/gallery`,
@@ -76,7 +81,7 @@ export class GalleryClient {
   }
 
   async fetchGallery(id: string): Promise<IGalleryCreateResponse> {
-    const token = localStorage.getItem("token");
+    const token = tokenService.getToken();
 
     const response = await axios.get<IGalleryCreateResponse>(
       `${httpClient.baseUrl}/gallery/${id}`,

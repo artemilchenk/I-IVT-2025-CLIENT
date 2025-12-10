@@ -13,3 +13,8 @@ export const ROUTES = {
   GALLERY: route("/gallery/:id"),
   HOME: route("/"),
 } as const;
+
+export const NavMode = {
+  DESKTOP: "desktop",
+  MOBILE: "mobile",
+};

@@ -1,10 +1,11 @@
-import { type FC, useMemo } from "react";
+import { type FC } from "react";
 import { HeaderComponent } from "@/components/Header/Component.tsx";
 import { Outlet } from "react-router";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
-import { NavMobile } from "@/router/component/NavMobile.tsx";
 import { DrawerType } from "@/constants/drawer.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
+import { Nav } from "@/router/component/Nav.tsx";
+import { NavMode } from "@/constants/router.ts";
 
 export const AppLayout: FC = () => {
   const drawerService = useDrawerService();
@@ -17,13 +18,17 @@ export const AppLayout: FC = () => {
 
         <div className={"md:hidden"}>
           <DrawerComponent
-            isOpen={!!drawerService.checkDrawer(DrawerType.NAV)}
+            index={50}
+            isOpen={drawerService.checkDrawer(DrawerType.NAV)}
             onClose={() => drawerService.closeDrawer(DrawerType.NAV)}
           >
             <div className={"p-2"}>
               <div className={"flex justify-center"}>
                 <div className={"w-2xl"}>
-                  <NavMobile />
+                  <Nav
+                    mode={NavMode.MOBILE}
+                    onClose={() => drawerService.closeDrawer(DrawerType.NAV)}
+                  />
                 </div>
               </div>
             </div>

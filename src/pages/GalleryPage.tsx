@@ -18,11 +18,12 @@ export function GalleryPage() {
 
   const { isLoading, gallery } = useFetchGallery(id || "");
 
+  console.log({ gallery });
+
   if (isLoading) return <Loader />;
 
   return (
     <div className="relative p-8 w-full max-w-3xl mx-auto space-y-6">
-      {/* Back button */}
       <Button
         variant="ghost"
         className="flex items-center gap-2"
@@ -55,7 +56,7 @@ export function GalleryPage() {
 
         <CardContent className="space-y-6 pt-6">
           <DrawerComponent
-            isOpen={!!drawerService.checkDrawer(DrawerType.GALLERY_INFO)}
+            isOpen={drawerService.checkDrawer(DrawerType.GALLERY_INFO)}
             onClose={() => drawerService.closeDrawer(DrawerType.GALLERY_INFO)}
           >
             <div className="flex w-full h-full justify-center items-center">

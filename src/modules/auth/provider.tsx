@@ -37,18 +37,18 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     staleTime: Infinity,
   });
 
-  const tokenToStorage = (token: string) => {
+  const saveToken = (token: string) => {
     localStorage.setItem("token", token);
   };
 
   const signUp = async (value: SignUpData) => {
     const response = await authService.signUp(value);
-    tokenToStorage(response.access_token);
+    saveToken(response.access_token);
     return response.user;
   };
   const signIn = async (value: SignInData) => {
     const response = await authService.signIn(value);
-    tokenToStorage(response.access_token);
+    saveToken(response.access_token);
 
     return response.user;
   };

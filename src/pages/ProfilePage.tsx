@@ -13,7 +13,7 @@ export const ProfilePage = () => {
   return (
     <Card className={"w-2/3 max-w-3xl relative overflow-hidden"}>
       <DrawerComponent
-        isOpen={!!drawerService.checkDrawer(DrawerType.EDIT_PROFILE)}
+        isOpen={drawerService.checkDrawer(DrawerType.EDIT_PROFILE)}
         onClose={() => drawerService.closeDrawer(DrawerType.EDIT_PROFILE)}
       >
         <div
