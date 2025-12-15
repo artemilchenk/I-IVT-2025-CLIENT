@@ -29,6 +29,7 @@ import { useAuth } from "@/modules/auth/context.ts";
 import type { SignUpData } from "@/modules/auth/types.ts";
 import { userCreateFormControls } from "@/mocks/user/userForm.ts";
 import { handleError } from "@/sheared";
+import { ROUTES } from "@/constants/router.ts";
 
 export const CreateUserForm = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export const CreateUserForm = (): React.ReactElement => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Authorised!");
-      navigate("/galleries", { replace: true });
+      navigate(ROUTES.PROFILE.path, { replace: true });
     },
     onError: (error) => {
       handleError(error, "Create user error");

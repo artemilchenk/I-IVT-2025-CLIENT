@@ -1,18 +1,9 @@
 import Pagination from "rc-pagination";
 import enUS from "rc-pagination/lib/locale/en_US";
 import { type FC } from "react";
+import type { PaginatorComponentProps } from "@/lib/paginator/types.ts";
 
-interface Props {
-  totalItems: number;
-  pageSize: number;
-  currentPage: number;
-  totalPages: number;
-  onNextButtonClick: () => void;
-  onPrevButtonClick: () => void;
-  onPageChangeHandler: (page: number, size?: number) => void;
-}
-
-export const PaginationComponent: FC<Props> = ({
+export const PaginatorComponent: FC<PaginatorComponentProps> = ({
   totalItems,
   pageSize,
   currentPage,

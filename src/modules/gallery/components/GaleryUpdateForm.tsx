@@ -24,10 +24,10 @@ import type { TBaseGallery } from "@/modules/gallery/types.ts";
 import { galleryPutFormControls } from "@/mocks/gallery/galleryForm.ts";
 import { DrawerType } from "@/constants/drawer.ts";
 import { useParams } from "react-router";
-import { useGalleryUpdate } from "@/modules/gallery/hooks/useGalleryUpdate.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useGalleryUpdate } from "../hooks/api/useGalleryUpdate";
 
 export const GalleryUpdateForm = (): React.ReactElement => {
   const { isLoading, mutation } = useGalleryUpdate();

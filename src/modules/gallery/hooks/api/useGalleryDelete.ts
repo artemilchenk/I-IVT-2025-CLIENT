@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useGalleryClient } from "@/modules/gallery/hooks/useGaleryService.ts";
+import { useGalleryClient } from "@/modules/gallery/hooks/useGalleryClient.ts";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 

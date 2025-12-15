@@ -20,14 +20,22 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/Button.tsx";
 import { baseGallerySchema } from "@/modules/gallery/schema.ts";
-import { useGalleryCreate } from "@/modules/gallery/hooks/useGalleryCreate.ts";
 import type { TBaseGallery } from "@/modules/gallery/types.ts";
 import { galleryPutFormControls } from "@/mocks/gallery/galleryForm.ts";
 
 import { DrawerType } from "@/constants/drawer.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
+import type { FC } from "react";
+import { cn } from "@/lib/utils.ts";
+import { useGalleryCreate } from "@/modules/gallery/hooks/api/useGalleryCreate.ts";
 
-export const GalleryCreateForm = (): React.ReactElement => {
+interface Props {
+  className?: string;
+}
+
+export const GalleryCreateForm: FC<Props> = ({
+  className,
+}): React.ReactElement => {
   const { isLoading, mutation } = useGalleryCreate();
 
   const form = useForm<z.infer<typeof baseGallerySchema>>({
@@ -46,7 +54,7 @@ export const GalleryCreateForm = (): React.ReactElement => {
   };
 
   return (
-    <Card className={"w-full"}>
+    <Card className={cn("", className)}>
       <CardHeader>
         <CardTitle>Create Gallery</CardTitle>
       </CardHeader>

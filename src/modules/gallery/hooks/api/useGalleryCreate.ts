@@ -1,33 +1,32 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useGalleryClient } from "@/modules/gallery/hooks/useGaleryService.ts";
+import { useGalleryClient } from "@/modules/gallery/hooks/useGalleryClient.ts";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 import type {
   IGalleryCreateResponse,
   TBaseGallery,
 } from "@/modules/gallery/types.ts";
-
 import { DrawerType } from "@/constants/drawer.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
-export const useGalleryUpdate = () => {
+export const useGalleryCreate = () => {
   const queryClient = useQueryClient();
   const galleryClient = useGalleryClient(queryClient);
   const drawerService = useDrawerService();
 
-  const mutation = useMutation<
-    IGalleryCreateResponse,
-    Error,
-    { dto: TBaseGallery; id: string }
-  >({
-    mutationFn: galleryClient.updateGallery,
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries(["user", variables.id]);
-      drawerService.closeDrawer(DrawerType.GALLERY_INFO);
-      toast.success("Gallery successfully updated!");
+  const mutation = useMutation<IGalleryCreateResponse, Error, TBaseGallery>({
+    mutationFn: galleryClient.createGallery,
+    onSuccess: (data) => {
+      galleryClient.setGalleriesData([
+        ...(galleryClient.getGalleriesData() || []),
+        data,
+      ]);
+      mutation.reset();
+      drawerService.closeDrawer(DrawerType.CREATE_GALLERY);
+      toast.success("New gallery successfully created!");
     },
     onError: (error) => {
-      handleError(error, "Update gallery error");
+      handleError(error, "Create gallery error");
     },
   });
 

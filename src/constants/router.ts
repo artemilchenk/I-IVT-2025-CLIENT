@@ -11,6 +11,8 @@ export const ROUTES = {
   GALLERIES: route("/galleries"),
   GALLERY_ID: (id: string) => route(`/gallery/${id}`),
   GALLERY: route("/gallery/:id"),
+  PHOTOS: route("/gallery/:galleryId/photos"),
+  PHOTOS_ID: (galleryId: string) => route(`/gallery/${galleryId}/photos`),
   HOME: route("/"),
 } as const;
 

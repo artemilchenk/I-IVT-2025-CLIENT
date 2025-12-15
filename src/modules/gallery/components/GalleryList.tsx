@@ -1,73 +1,62 @@
-import { useGalleryClient } from "@/modules/gallery/hooks/useGaleryService.ts";
 import { AnimatePresence } from "framer-motion";
-import { DrawerType } from "@/constants/drawer.ts";
+import { DrawerIndexes, DrawerType } from "@/constants/drawer.ts";
 import { GalleryItem } from "@/modules/gallery/components/GalleryItem.tsx";
-import { useQueryClient } from "@tanstack/react-query";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { PaginationComponent } from "@/components/PaginationComponent.tsx";
+import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
+import { ConfirmPrompt } from "@/components/ConfirmPrompt.tsx";
+import { useGalleryDelete } from "@/modules/gallery/hooks/api/useGalleryDelete.ts";
+import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
+import type { FC } from "react";
 
-export const GalleryList = () => {
-  const queryClient = useQueryClient();
-  const galleryClient = useGalleryClient(queryClient);
-  const galleries = galleryClient.getGalleriesData();
+interface Props {
+  items: IGalleryCreateResponse[];
+}
+
+export const GalleryList: FC<Props> = ({ items }) => {
   const drawerService = useDrawerService();
-
-  const pageSize = 6;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  if (!galleries) return null;
-
-  const totalPages = Math.ceil(galleries.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-
-  const visibleGalleries = galleries.slice(startIndex, endIndex);
-
-  const handlePrev = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
-  const onPageChangeHandler = (page: number) => {
-    setCurrentPage(page);
-    //if (size) setPageSize(size);
-  };
-
-  const isDrover = drawerService.checkDrawer(DrawerType.CREATE_GALLERY);
+  const { isLoading, mutation } = useGalleryDelete();
 
   return (
-    <div>
-      <div className={"p-2"}>
-        <PaginationComponent
-          totalItems={galleries.length}
-          currentPage={currentPage}
-          pageSize={pageSize}
-          totalPages={totalPages}
-          onNextButtonClick={handleNext}
-          onPrevButtonClick={handlePrev}
-          onPageChangeHandler={onPageChangeHandler}
-        />
-      </div>
-
-      <div
-        className={`w-full grid items-center justify-center  grid-cols-1 sm:grid-cols-2 gap-4 h-[calc(100vh-220px)] overflow-${isDrover ? "hidden" : "scroll"}`}
-      >
-        <AnimatePresence>
-          {visibleGalleries?.map((item) => (
-            <motion.div
-              key={item.id}
-              className={"relative overflow-hidden h-38"}
+    <div
+      className={`w-full grid items-center justify-center grid-cols-1 sm:grid-cols-2 gap-4`}
+    >
+      <AnimatePresence>
+        {items?.map((item) => (
+          <motion.div key={item.id}>
+            <div
+              className={
+                "relative overflow-hidden shadow hover:shadow-md transition cursor-pointer rounded-2xl border border-gray-100"
+              }
             >
-              <GalleryItem key={item.id} item={item} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+              <DrawerComponent
+                index={DrawerIndexes.GALLERY_DELETE}
+                isOpen={drawerService.checkDrawer(
+                  DrawerType.GALLERY_DELETE,
+                  item.id,
+                )}
+              >
+                <ConfirmPrompt
+                  text={"Delete this gallery?"}
+                  onConfirm={() => mutation.mutate(item.id)}
+                  onCancel={() => {
+                    drawerService.closeDrawer(
+                      DrawerType.GALLERY_DELETE,
+                      item.id,
+                    );
+                  }}
+                />
+              </DrawerComponent>
+
+              <GalleryItem
+                isDeleteActive={isLoading}
+                key={item.id}
+                item={item}
+              />
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 };

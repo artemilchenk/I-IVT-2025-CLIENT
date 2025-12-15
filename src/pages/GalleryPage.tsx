@@ -3,20 +3,25 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Edit, Loader } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/Button.tsx";
-import { useFetchGallery } from "@/modules/gallery/hooks/useFetchGallery.ts";
 import ImagePlaceholder from "@/components/ImagePlaceholder.tsx";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { DrawerType } from "@/constants/drawer.ts";
 import { GalleryUpdateForm } from "@/modules/gallery/components/GaleryUpdateForm.tsx";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
+import { useFetchGallery } from "@/modules/gallery/hooks/api/useFetchGallery.ts";
+import { usePhotoCreate } from "@/modules/gallery/hooks/api/usePhotoCreate.ts";
+import { ROUTES } from "@/constants/router.ts";
 
 export function GalleryPage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const drawerService = useDrawerService();
+  const { isLoading: isCrtPhotoLoading, mutation } = usePhotoCreate();
 
   const { isLoading, gallery } = useFetchGallery(id || "");
+
+  if (!id) return;
 
   if (isLoading) return <Loader />;
 
@@ -36,6 +41,24 @@ export function GalleryPage() {
             <ImagePlaceholder />
 
             <div className="absolute right-2 top-2 flex gap-2">
+              <Button
+                disabled={isCrtPhotoLoading}
+                onClick={() => {
+                  mutation.mutate({ buffer: "Picture4", galleryId: id || "" });
+                }}
+              >
+                Add Photo
+              </Button>
+
+              <Button
+                disabled={isCrtPhotoLoading}
+                onClick={() => {
+                  navigate(ROUTES.PHOTOS_ID(id).path);
+                }}
+              >
+                View Photos
+              </Button>
+
               {!drawerService.checkDrawer(DrawerType.GALLERY_INFO) && (
                 <Button
                   onClick={() => {
@@ -62,7 +85,6 @@ export function GalleryPage() {
             </div>
           </DrawerComponent>
 
-          {/* Title */}
           <section>
             <h2 className="text-lg font-medium">Title</h2>
             <p className="text-muted-foreground">{gallery?.title}</p>

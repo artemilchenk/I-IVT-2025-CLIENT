@@ -1,4 +1,8 @@
-import type { DrawerState, TDrawerType } from "@/features/drawer/types.ts";
+import type {
+  Drawer,
+  DrawerState,
+  TDrawerType,
+} from "@/features/drawer/types.ts";
 
 export class DrawerService {
   private readonly drawerState: DrawerState;
@@ -6,43 +10,57 @@ export class DrawerService {
     this.drawerState = drawerState;
   }
 
-  checkDrawer(currentDrawer: TDrawerType, parentId?: string) {
-    const isId = !!this.drawerState.parentsId.find(
-      (parentItem) => parentItem === parentId,
-    );
+  checkDrawer(type: TDrawerType, parentId?: string) {
+    const drawer = this.findDrawer(type);
+    if (!drawer) return false;
 
-    const isType = !!this.drawerState.drawers.find(
-      (drawer) => drawer === currentDrawer,
-    );
+    if (!parentId) return !!drawer;
 
-    if (parentId) return isId && isType;
+    return !!drawer.parentsId.find((itemId) => itemId === parentId);
+  }
 
-    return isType;
+  findDrawer(type: TDrawerType) {
+    return this.drawerState.drawers.find((drawer) => drawer.type === type);
   }
 
   openDrawer(type: TDrawerType, parentId?: string) {
-    if (parentId) {
-      this.drawerState.setParentIds([...this.drawerState.parentsId, parentId]);
-      this.drawerState.setDrawers([...this.drawerState.drawers, type]);
+    const drawer = this.findDrawer(type);
+    let newDrawer: Drawer;
+
+    if (!drawer) {
+      newDrawer = { type, parentsId: parentId ? [parentId] : [] };
+      this.drawerState.setDrawers([...this.drawerState.drawers, newDrawer]);
+    } else {
+      if (parentId) {
+        const newParentsId = [...drawer.parentsId, parentId];
+        newDrawer = { ...drawer, parentsId: newParentsId };
+        const drawersWithoutOld = this.drawerState.drawers.filter(
+          (itemDrawer) => itemDrawer.type !== drawer.type,
+        );
+        this.drawerState.setDrawers([...drawersWithoutOld, newDrawer]);
+      }
     }
-    this.drawerState.setDrawers([...this.drawerState.drawers, type]);
   }
 
   closeDrawer(type: TDrawerType, parentId?: string) {
-    const index = this.drawerState.drawers.indexOf(type);
-    if (index === -1) return this.drawerState.drawers;
+    const drawer = this.findDrawer(type);
+    if (!drawer) return;
 
-    if (parentId) {
-      this.drawerState.setParentIds(
-        this.drawerState.parentsId.filter(
-          (parentItemId) => parentId !== parentItemId,
-        ),
+    const drawerIndex = this.drawerState.drawers.indexOf(drawer);
+
+    if (!parentId) {
+      this.drawerState.setDrawers(
+        this.drawerState.drawers.filter((drawer) => drawer.type !== type),
       );
+    } else {
+      const newDrawer: Drawer = {
+        ...drawer,
+        parentsId: drawer.parentsId.filter((item) => item !== parentId),
+      };
+      const newDrawers = this.drawerState.drawers.map((item, i) =>
+        i === drawerIndex ? newDrawer : item,
+      );
+      this.drawerState.setDrawers(newDrawers);
     }
-
-    this.drawerState.setDrawers([
-      ...this.drawerState.drawers.slice(0, index),
-      ...this.drawerState.drawers.slice(index + 1),
-    ]);
   }
 }

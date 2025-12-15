@@ -1,10 +1,13 @@
 import type { DrawerType } from "@/constants/drawer.ts";
 
-export interface DrawerState {
+export interface Drawer {
+  type: TDrawerType;
   parentsId: string[];
-  drawers: TDrawerType[];
-  setDrawers: (drawers: TDrawerType[]) => void;
-  setParentIds: (parentsId: string[]) => void;
+}
+
+export interface DrawerState {
+  drawers: Drawer[];
+  setDrawers: (drawers: Drawer[]) => void;
 }
 
 export type TDrawerType = (typeof DrawerType)[keyof typeof DrawerType];

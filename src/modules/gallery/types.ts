@@ -24,10 +24,21 @@ export type TBaseGallery = z.infer<typeof baseGallerySchema>;
 export interface IGalleryCreateResponse extends TBaseGallery {
   id: string;
   createdAt: Date;
-  user: { id: number };
+  user?: { id: number };
+  images?: CreatePhotoResponse[];
 }
-
-//export interface IGalleryUpdateResponse extends IGalleryCreateResponse {}
 
 export type GalleryPutFormControlNames = keyof TBaseGallery;
 export type GalleryPutFormControl = FormControl<GalleryPutFormControlNames>;
+
+export interface PhotoInput {
+  buffer: string;
+}
+
+export interface CreatePhotoResponse {
+  id: string;
+  path: string;
+  galleryId: string;
+  originalFilename: string;
+  createdAt: Date;
+}
