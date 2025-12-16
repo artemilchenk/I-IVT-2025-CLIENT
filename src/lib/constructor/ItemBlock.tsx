@@ -7,7 +7,7 @@ export const ItemBlock = ({
 }) => {
   return (
     <div
-      className={`p-3 rounded shadow bg-white ${dragging ? "opacity-80" : ""}`}
+      className={`p-2 rounded shadow bg-white ${dragging ? "opacity-80" : ""} h-30`}
     >
       {label}
     </div>

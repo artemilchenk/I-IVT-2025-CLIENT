@@ -78,6 +78,7 @@ export class GalleryClient {
   }
 
   async fetchGalleries(): Promise<IGalleryCreateResponse[]> {
+    console.log("------refetchgalleries");
     const token = tokenService.getToken();
 
     const response = await axios.get<IGalleryCreateResponse[]>(

@@ -78,9 +78,9 @@ export const GalleryCreateForm: FC<Props> = ({
                       placeholder={galleryControl.placeholder}
                       autoComplete="off"
                     />
-                    {fieldState.invalid && (
+                    {fieldState.invalid ? (
                       <FieldError errors={[fieldState.error]} />
-                    )}
+                    ) : null}
                   </Field>
                 )}
               />

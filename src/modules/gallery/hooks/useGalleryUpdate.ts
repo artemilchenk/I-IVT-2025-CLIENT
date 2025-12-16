@@ -21,8 +21,10 @@ export const useGalleryUpdate = () => {
     { dto: TBaseGallery; id: string }
   >({
     mutationFn: galleryClient.updateGallery,
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries(["user", variables.id]);
+    onSuccess: async (_data, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["gallery", variables.id],
+      });
       drawerService.closeDrawer(DrawerType.GALLERY_INFO);
       toast.success("Gallery successfully updated!");
     },

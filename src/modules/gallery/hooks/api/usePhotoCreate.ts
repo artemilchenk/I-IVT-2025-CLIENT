@@ -17,8 +17,11 @@ export const usePhotoCreate = () => {
     PhotoInput & { galleryId: string }
   >({
     mutationFn: galleryClient.createPhoto,
-    onSuccess: (data) => {
-      console.log({ data });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["galleries"],
+      });
+      console.log(galleryClient.getGalleriesData());
       toast.success("New photo successfully created!");
     },
     onError: (error) => {

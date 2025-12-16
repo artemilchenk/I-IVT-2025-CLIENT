@@ -11,9 +11,12 @@ export const AppLayout: FC = () => {
   const drawerService = useDrawerService();
 
   return (
-    <div className={"overflow-hidden h-[calc(100vh-150px)]"}>
-      <HeaderComponent />
-      <div className="relative flex flex-col w-full h-full items-center p-2">
+    <div className="flex flex-col h-screen overflow-hidden">
+      <div className="h-[60px]">
+        <HeaderComponent />
+      </div>
+
+      <div className="relative flex-1 flex flex-col w-full items-center p-4">
         <Outlet />
 
         <div className={"md:hidden"}>

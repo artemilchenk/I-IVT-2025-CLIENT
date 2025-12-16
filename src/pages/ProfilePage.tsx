@@ -11,13 +11,13 @@ export const ProfilePage = () => {
   const drawerService = useDrawerService();
 
   return (
-    <Card className={"w-2/3 max-w-3xl relative overflow-hidden"}>
+    <Card className={"w-2/3 relative overflow-hidden h-fit"}>
       <DrawerComponent
         isOpen={drawerService.checkDrawer(DrawerType.EDIT_PROFILE)}
         onClose={() => drawerService.closeDrawer(DrawerType.EDIT_PROFILE)}
       >
         <div
-          className={"flex  justify-center w-full overflow-scroll h-full p-2"}
+          className={"flex justify-center w-full overflow-scroll h-full p-2"}
         >
           <div className={"w-1/2 "}>
             <UpdateUserForm />

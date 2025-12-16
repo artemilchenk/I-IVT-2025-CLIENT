@@ -16,7 +16,7 @@ export const HeaderComponent = () => {
   const drawerService = useDrawerService();
 
   return (
-    <header className="relative flex w-full bg-white shadow-md px-6 py-3">
+    <header className="relative flex w-full justify-center items-center bg-white shadow-md px-6 py-3 h-full">
       <div className={"mx-auto"}>
         <div className={"hidden md:block"}>
           <Nav

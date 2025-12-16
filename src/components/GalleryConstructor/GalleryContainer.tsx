@@ -1,46 +1,48 @@
 import { useState } from "react";
-import type { CreatePhotoResponse } from "@/modules/gallery/types.ts";
-import type { Container } from "@/lib/constructor/types.ts";
+import type { Container, Item } from "@/lib/constructor/types.ts";
 import { Draggable, DropContainer, ItemBlock } from "@/lib/constructor";
 import { ItemPaginator } from "@/lib/paginator";
 
 export const GalleryContainer = ({
-  container,
+  containerItem,
 }: {
-  container: Container<CreatePhotoResponse>;
+  containerItem: Container<Item>;
 }) => {
-  const [paginationItems, setPaginationItems] = useState<CreatePhotoResponse[]>(
-    [],
-  );
+  const [paginationItems, setPaginationItems] = useState<Item[]>([]);
 
   return (
-    <div>
+    <div className={"h-full"}>
       <DropContainer
-        id={container.id}
-        key={container.id}
-        title={container.name}
+        id={containerItem.id}
+        key={containerItem.id}
+        title={containerItem.name}
       >
-        {paginationItems.map((item) => (
-          <Draggable
-            data={{ sourceContainerId: container.id }}
-            id={item.id}
-            key={item.id}
-          >
-            <div className={"cursor-pointer"}>
-              <ItemBlock label={item.originalFilename} />
-            </div>
-          </Draggable>
-        ))}
+        <div className={"w-full h-full grid grid-cols-2 gap-3"}>
+          {paginationItems.map((item) => (
+            <Draggable
+              data={{ sourceContainerId: containerItem.id }}
+              id={item.id}
+              key={item.id}
+            >
+              <div className={"cursor-pointer"}>
+                <ItemBlock label={item.label || ""} />
+              </div>
+            </Draggable>
+          ))}
+        </div>
       </DropContainer>
-      {container.items?.length && (
-        <ItemPaginator
-          data={container.items}
-          onPaginatorChange={(items) => {
-            setPaginationItems(items);
-          }}
-          pageSize={4}
-        />
-      )}
+
+      <div className={"absolute p-2 top-0 right-0"}>
+        {containerItem.items?.length ? (
+          <ItemPaginator
+            data={containerItem.items}
+            onPaginatorChange={(items) => {
+              setPaginationItems(items);
+            }}
+            pageSize={4}
+          />
+        ) : null}
+      </div>
     </div>
   );
 };

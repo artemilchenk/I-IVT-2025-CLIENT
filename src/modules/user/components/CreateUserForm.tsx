@@ -53,8 +53,8 @@ export const CreateUserForm = (): React.ReactElement => {
 
   const mutation = useMutation({
     mutationFn: signUp,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Authorised!");
       navigate(ROUTES.PROFILE.path, { replace: true });
     },
@@ -88,9 +88,9 @@ export const CreateUserForm = (): React.ReactElement => {
                       placeholder={user.placeholder}
                       autoComplete="off"
                     />
-                    {fieldState.invalid && (
+                    {fieldState.invalid ? (
                       <FieldError errors={[fieldState.error]} />
-                    )}
+                    ) : null}
                   </Field>
                 )}
               />

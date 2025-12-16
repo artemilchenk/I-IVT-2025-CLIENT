@@ -15,12 +15,14 @@ export const DropContainer = ({
   return (
     <div
       ref={setNodeRef}
-      className={`p-4 rounded-lg border-2 h-full transition ${
+      className={`p-4 rounded-lg border-2 transition ${
         isOver ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-gray-100"
-      }`}
+      } h-full flex flex-col`}
     >
-      <h2 className="text-xl font-semibold mb-3">{title}</h2>
-      <div className="flex flex-col gap-3">{children}</div>
+      <h2 className=" text-xl font-semibold mb-3">{title}</h2>
+      <div className="flex-1 flex flex-col gap-3 overflow-scroll max-h-50">
+        {children}
+      </div>
     </div>
   );
 };

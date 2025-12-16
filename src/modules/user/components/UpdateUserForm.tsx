@@ -138,9 +138,9 @@ export const UpdateUserForm = (): React.ReactElement => {
                         placeholder={user.placeholder}
                         autoComplete="off"
                       />
-                      {fieldState.invalid && (
+                      {fieldState.invalid ? (
                         <FieldError errors={[fieldState.error]} />
-                      )}
+                      ) : null}
                     </Field>
                   )}
                 />

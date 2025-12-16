@@ -22,7 +22,9 @@ export const useGalleryUpdate = () => {
   >({
     mutationFn: galleryClient.updateGallery,
     onSuccess: async (_data, variables) => {
-      await queryClient.invalidateQueries(["user", variables?.id]);
+      await queryClient.invalidateQueries({
+        queryKey: ["gallery", variables.id],
+      });
       drawerService.closeDrawer(DrawerType.GALLERY_INFO);
       toast.success("Gallery successfully updated!");
     },

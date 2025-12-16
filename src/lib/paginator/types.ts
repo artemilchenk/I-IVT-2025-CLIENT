@@ -3,7 +3,7 @@ export interface PaginatorComponentProps {
   pageSize: number;
   currentPage: number;
   totalPages: number;
-  onNextButtonClick?: () => void;
-  onPrevButtonClick?: () => void;
-  onPageChangeHandler?: (page: number, size?: number) => void;
+  onNextButtonClick: () => void;
+  onPrevButtonClick: () => void;
+  onPageChangeHandler: (page: number, size?: number) => void;
 }
