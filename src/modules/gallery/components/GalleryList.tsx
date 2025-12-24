@@ -1,103 +1,88 @@
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 import { useGalleryDelete } from "@/modules/gallery/hooks/api/useGalleryDelete.ts";
 import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
-import { type FC, useEffect, useMemo, useState } from "react";
-import type { Container, Item } from "@/lib/constructor/types.ts";
-import { Constructor } from "@/lib/constructor";
-import { GalleryContainer } from "@/components/GalleryConstructor/GalleryContainer.tsx";
-import { GalleryItem } from "@/modules/gallery/components/GalleryItem.tsx";
-import { DrawerIndexes, DrawerType } from "@/constants/drawer.ts";
-import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
-import { ConfirmPrompt } from "@/components/ConfirmPrompt.tsx";
+import { type FC, useMemo } from "react";
+import { type Container, MultiContainerDnD } from "@/pages/test";
+import { DroppableContainer } from "@/pages/test/dc.tsx";
+import { DraggableItem } from "@/pages/test/di.tsx";
+
+const initialContainers: Container[] = [
+  {
+    id: "c1",
+    title: "Container 1",
+    items: [
+      { id: "i1", label: "Item 1" },
+      { id: "i2", label: "Item 2" },
+      { id: "i3", label: "Item 3" },
+      { id: "i4", label: "Item 4" },
+      { id: "i5", label: "Item 5" },
+      { id: "i6", label: "Item 6" },
+      { id: "i7", label: "Item 7" },
+      { id: "i8", label: "Item 8" },
+    ],
+  },
+  {
+    id: "c2",
+    title: "Container 2",
+    items: [{ id: "i9", label: "Item 9" }],
+  },
+  {
+    id: "c3",
+    title: "Container 3",
+    items: [],
+  },
+];
 
 interface Props {
   items: IGalleryCreateResponse[];
 }
 
 export const GalleryList: FC<Props> = ({ items }) => {
-  const drawerService = useDrawerService();
-  const { isLoading, mutation } = useGalleryDelete();
+  //const drawerService = useDrawerService();
+  //const { isLoading, mutation } = useGalleryDelete();
 
-  const [activeItem, setActiveItem] = useState<Item | null>(null);
-  const constructorData = useMemo(() => {
+  const dndData = useMemo(() => {
     return (
-      items?.map((galleryItem) => {
+      items?.map((container) => {
         return {
-          id: galleryItem.id,
-          name: galleryItem.title,
+          id: container.id,
+          title: container.title,
           items:
-            galleryItem.images?.map((photoItem) => ({
-              id: photoItem.id,
-              label: photoItem.originalFilename,
+            container.images?.map((imageItem) => ({
+              id: imageItem.id,
+              label: imageItem.originalFilename,
             })) || [],
         };
       }) || []
     );
   }, [items]);
 
-  const [constructorDataState, setConstructorDataState] =
-    useState<Container<Item>[]>(constructorData);
-
-  useEffect(() => {
-    setConstructorDataState(constructorData);
-  }, [constructorData]);
-
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 w-full`}>
-      <Constructor
-        data={constructorData}
-        setContainerData={setConstructorDataState}
-        activeItem={activeItem}
-        onDragEndAction={() => setActiveItem(null)}
-        onDragStartAction={(found) => {
-          setActiveItem(found);
-        }}
-      >
-        {constructorDataState?.map((containerItem) => {
-          //if (!containerItem.items.length) return;
-
-          return (
-            <div
-              key={containerItem.id}
-              className={
-                "min-h-80 relative flex flex-col overflow-hidden shadow hover:shadow-md transition cursor-pointer rounded-2xl border border-gray-100"
-              }
-            >
-              <GalleryItem
-                isDeleteActive={isLoading}
-                key={containerItem.id}
-                item={containerItem}
-              >
-                <div className={"relative flex-1"}>
-                  <GalleryContainer
-                    key={containerItem.id}
-                    containerItem={containerItem}
-                  />
+    <MultiContainerDnD
+      initialData={dndData}
+      render={({ containers }) => (
+        <div className="dnd grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          {containers.map((container) => (
+            <DroppableContainer key={container.id} container={container}>
+              <div className={"overflow-scroll max-h-80"}>
+                <div className="dnd-container border border-red-200 p-5 flex flex-col gap-3 h-full min-h-80">
+                  {container.items.map((item) => (
+                    <DraggableItem
+                      key={item.id}
+                      item={item}
+                      sourceContainerId={container.id}
+                    >
+                      <div className="dnd-item p-2 bg-green-200">
+                        {item.label}
+                      </div>
+                    </DraggableItem>
+                  ))}
                 </div>
-              </GalleryItem>
-
-              <DrawerComponent
-                index={DrawerIndexes.GALLERY_DELETE}
-                isOpen={drawerService.checkDrawer(
-                  DrawerType.GALLERY_DELETE,
-                  containerItem.id,
-                )}
-              >
-                <ConfirmPrompt
-                  text={"Delete this gallery?"}
-                  onConfirm={() => mutation.mutate(containerItem.id)}
-                  onCancel={() => {
-                    drawerService.closeDrawer(
-                      DrawerType.GALLERY_DELETE,
-                      containerItem.id,
-                    );
-                  }}
-                />
-              </DrawerComponent>
-            </div>
-          );
-        })}
-      </Constructor>
-    </div>
+              </div>
+            </DroppableContainer>
+          ))}
+        </div>
+      )}
+    />
   );
 };

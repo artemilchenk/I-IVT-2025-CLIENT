@@ -45,7 +45,6 @@ export const GalleriesPage = () => {
             <GalleryCreateForm className={"w-2xl"} />
           </div>
         </DrawerComponent>
-
         <div className={"w-full h-full overflow-scroll"}>
           {galleries?.length ? <GalleryList items={paginationItems} /> : null}
         </div>
