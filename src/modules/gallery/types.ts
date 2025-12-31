@@ -42,3 +42,18 @@ export interface CreatePhotoResponse {
   originalFilename: string;
   createdAt: Date;
 }
+
+export interface GalleryContextType {
+  galleries: IGalleryCreateResponse[] | undefined;
+  galleriesIsFetching: boolean;
+  paginationItems: IGalleryCreateResponse[];
+  isDrover: boolean;
+  pageSize: number;
+  totalPages: number;
+  isLastOnPage: boolean;
+  currentPage: number;
+  decrementPageBy: (step: number) => void;
+  handlePrev: () => void;
+  handleNext: () => void;
+  onPageChangeHandler: (page: number) => void;
+}

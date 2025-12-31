@@ -8,22 +8,21 @@ import { Button } from "@/components/ui/Button.tsx";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { ConfirmPrompt } from "@/components/ConfirmPrompt.tsx";
 import { useGalleryDelete } from "@/modules/gallery/hooks/api/useGalleryDelete.ts";
+import { useGalleries } from "@/modules/gallery/context.ts";
 
 interface Props {
   container: Container;
   children: ReactNode;
-  onDeleteSuccess: () => void;
 }
 
-export const GalleryContainer: FC<Props> = ({
-  container,
-  onDeleteSuccess,
-  children,
-}) => {
+export const GalleryContainer: FC<Props> = ({ container, children }) => {
   const navigate = useNavigate();
   const drawerService = useDrawerService();
+  const { isLastOnPage, decrementPageBy } = useGalleries();
   const { isLoading, mutation } = useGalleryDelete({
-    onDeleteSuccess: onDeleteSuccess,
+    onDeleteSuccess: () => {
+      if (isLastOnPage) decrementPageBy(1);
+    },
   });
 
   return (

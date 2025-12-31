@@ -1,56 +1,27 @@
 import { GalleryList } from "@/modules/gallery/components/GalleryList.tsx";
-import { useMemo, useState } from "react";
 import { DrawerIndexes, DrawerType } from "@/constants/drawer.ts";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { GalleryCreateForm } from "@/modules/gallery/components/GalleryCreateForm.tsx";
-import { useFetchGalleries } from "@/modules/gallery/hooks/api/useGalleries.ts";
-import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 import { PaginatorComponent } from "@/lib/paginator/PaginatorComponent.tsx";
-import { usePaginationData } from "@/lib/paginator/usePaginationData.ts";
-
-const pageSize = 4;
+import { useGalleries } from "@/modules/gallery/context.ts";
 
 export const GalleriesPage = () => {
-  const { isLoading, galleries } = useFetchGalleries();
   const drawerService = useDrawerService();
+  const {
+    galleriesIsFetching,
+    galleries,
+    pageSize,
+    totalPages,
+    onPageChangeHandler,
+    isDrover,
+    paginationItems,
+    currentPage,
+    handlePrev,
+    handleNext,
+  } = useGalleries();
 
-  const isDrover = useMemo(
-    () => drawerService.checkDrawer(DrawerType.CREATE_GALLERY),
-    [drawerService],
-  );
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const { totalPages, paginationItems } =
-    usePaginationData<IGalleryCreateResponse>(
-      galleries || [],
-      pageSize,
-      currentPage,
-    );
-
-  const handlePrev = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
-  const onPageChangeHandler = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const checkLastOnPage = useMemo(() => {
-    if (!galleries?.length) return;
-
-    return galleries.length % pageSize === 1;
-  }, [galleries]);
-
-  const handleDelete = () => {
-    if (checkLastOnPage) setCurrentPage((prev) => prev - 1);
-  };
-
-  if (isLoading) return <div>Loading...</div>;
+  if (galleriesIsFetching) return <div>Loading...</div>;
 
   return (
     <div className="px-2 w-full h-[calc(100vh-150px)]">
@@ -74,7 +45,7 @@ export const GalleriesPage = () => {
           </div>
         </DrawerComponent>
         <div className={"w-full h-full overflow-scroll"}>
-          <GalleryList onDeleteSuccess={handleDelete} items={paginationItems} />
+          <GalleryList items={paginationItems} />
         </div>
 
         <div className={"p-2"}>

@@ -10,6 +10,7 @@ import { HomePage } from "@/pages/HomePage.tsx";
 import { AuthGuardPage } from "@/pages/AuthGuardPage.tsx";
 import { NotFoundPage } from "@/pages/NotFoundPage.tsx";
 import { GalleryPage } from "@/pages/GalleryPage.tsx";
+import { GalleriesProvider } from "@/modules/gallery/provider.tsx";
 
 export const RouterComponent: FC = () => {
   return (
@@ -27,7 +28,14 @@ export const RouterComponent: FC = () => {
         {/* PROTECTED ROUTES */}
         <Route element={<AuthGuardPage />}>
           <Route path={ROUTES.GALLERY.path} element={<GalleryPage />} />
-          <Route path={ROUTES.GALLERIES.path} element={<GalleriesPage />} />
+          <Route
+            path={ROUTES.GALLERIES.path}
+            element={
+              <GalleriesProvider>
+                <GalleriesPage />
+              </GalleriesProvider>
+            }
+          />
           <Route path={ROUTES.PROFILE.path} element={<ProfilePage />} />
         </Route>
       </Route>

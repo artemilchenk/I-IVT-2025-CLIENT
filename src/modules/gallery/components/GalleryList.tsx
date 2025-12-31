@@ -8,10 +8,9 @@ import { GalleryMultiContainerDnD } from "@/modules/gallery/components/GalleryMu
 
 interface Props {
   items: IGalleryCreateResponse[];
-  onDeleteSuccess: () => void;
 }
 
-export const GalleryList: FC<Props> = ({ items, onDeleteSuccess }) => {
+export const GalleryList: FC<Props> = ({ items }) => {
   const dndData = useMemo(() => {
     return (
       items?.map((container) => {
@@ -35,10 +34,7 @@ export const GalleryList: FC<Props> = ({ items, onDeleteSuccess }) => {
         <GalleryMultiContainerDnD>
           {containers.map((container) => (
             <DroppableContainer key={container.id} container={container}>
-              <GalleryContainer
-                onDeleteSuccess={onDeleteSuccess}
-                container={container}
-              >
+              <GalleryContainer container={container}>
                 {container.items.map((item) => (
                   <DraggableItem
                     key={item.id}
