@@ -30,13 +30,13 @@ import {
 } from "@dnd-kit/core";
 
 export function MultiContainerDnD({
-  initialData,
   render,
+  data,
 }: {
-  initialData: Container[];
+  data: Container[];
   render: (args: { containers: Container[] }) => ReactNode;
 }) {
-  const [containers, setContainers] = useState<Container[]>([]);
+  const [containers, setContainers] = useState<Container[]>(data);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
 
   const sensors = useSensors(
@@ -92,8 +92,8 @@ export function MultiContainerDnD({
   };
 
   useEffect(() => {
-    setContainers(initialData);
-  }, [initialData]);
+    setContainers(data);
+  }, [data]);
 
   return (
     <DndContext
@@ -106,7 +106,7 @@ export function MultiContainerDnD({
 
       <DragOverlay>
         {activeItem ? (
-          <div className="dnd-item p-2 bg-green-200 shadow-lg">
+          <div className="dnd-item p-2 bg-green-200 shadow-lg min-h-30">
             {activeItem.label}
           </div>
         ) : null}

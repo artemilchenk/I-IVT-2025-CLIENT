@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export const usePaginationData = <T extends { id: string }>(
   items: T[],
   pageSize: number,
+  currentPage: number,
 ) => {
-  const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(items.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -15,8 +15,6 @@ export const usePaginationData = <T extends { id: string }>(
   );
 
   return {
-    currentPage,
-    setCurrentPage,
     startIndex,
     endIndex,
     totalPages,

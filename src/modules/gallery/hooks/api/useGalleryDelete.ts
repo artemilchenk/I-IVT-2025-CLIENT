@@ -3,7 +3,11 @@ import { useGalleryClient } from "@/modules/gallery/hooks/useGalleryClient.ts";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 
-export const useGalleryDelete = () => {
+export const useGalleryDelete = ({
+  onDeleteSuccess,
+}: {
+  onDeleteSuccess: () => void;
+}) => {
   const queryClient = useQueryClient();
   const galleryClient = useGalleryClient(queryClient);
 
@@ -16,6 +20,7 @@ export const useGalleryDelete = () => {
           (gallery) => gallery.id !== data.id,
         ),
       );
+      onDeleteSuccess();
     },
     onError: (error) => {
       handleError(error, "Delete gallery error");

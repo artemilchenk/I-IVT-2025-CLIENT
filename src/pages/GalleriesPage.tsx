@@ -4,13 +4,15 @@ import { DrawerIndexes, DrawerType } from "@/constants/drawer.ts";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { GalleryCreateForm } from "@/modules/gallery/components/GalleryCreateForm.tsx";
 import { useFetchGalleries } from "@/modules/gallery/hooks/api/useGalleries.ts";
-import { ItemPaginator } from "@/lib/paginator";
 import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
+import { PaginatorComponent } from "@/lib/paginator/PaginatorComponent.tsx";
+import { usePaginationData } from "@/lib/paginator/usePaginationData.ts";
+
+const pageSize = 4;
 
 export const GalleriesPage = () => {
   const { isLoading, galleries } = useFetchGalleries();
-
   const drawerService = useDrawerService();
 
   const isDrover = useMemo(
@@ -18,9 +20,35 @@ export const GalleriesPage = () => {
     [drawerService],
   );
 
-  const [paginationItems, setPaginationItems] = useState<
-    IGalleryCreateResponse[]
-  >([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { totalPages, paginationItems } =
+    usePaginationData<IGalleryCreateResponse>(
+      galleries || [],
+      pageSize,
+      currentPage,
+    );
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const onPageChangeHandler = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const checkLastOnPage = useMemo(() => {
+    if (!galleries?.length) return;
+
+    return galleries.length % pageSize === 1;
+  }, [galleries]);
+
+  const handleDelete = () => {
+    if (checkLastOnPage) setCurrentPage((prev) => prev - 1);
+  };
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -46,17 +74,19 @@ export const GalleriesPage = () => {
           </div>
         </DrawerComponent>
         <div className={"w-full h-full overflow-scroll"}>
-          {galleries?.length ? <GalleryList items={paginationItems} /> : null}
+          <GalleryList onDeleteSuccess={handleDelete} items={paginationItems} />
         </div>
 
         <div className={"p-2"}>
           {galleries?.length ? (
-            <ItemPaginator
-              data={galleries}
-              onPaginatorChange={(items) => {
-                setPaginationItems(items);
-              }}
-              pageSize={4}
+            <PaginatorComponent
+              totalItems={galleries?.length || 0}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              totalPages={totalPages}
+              onNextButtonClick={handleNext}
+              onPrevButtonClick={handlePrev}
+              onPageChangeHandler={onPageChangeHandler}
             />
           ) : null}
         </div>
