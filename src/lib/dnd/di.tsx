@@ -33,7 +33,15 @@ export function DraggableItem({
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+    >
       {children}
     </div>
   );
