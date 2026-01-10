@@ -1,10 +1,9 @@
-import { type FC, type ReactNode, useMemo, useState } from "react";
+import { type FC, type ReactNode, useMemo } from "react";
 import { GalleriesContext } from "./context";
 import { useFetchGalleries } from "@/modules/gallery/hooks/api/useGalleries.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 import { DrawerType } from "@/constants/drawer.ts";
-import { usePaginationData } from "@/lib/paginator/usePaginationData.ts";
-import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
+import { usePageParam } from "@/modules/gallery/hooks/usePageParam.ts";
 
 interface Props {
   children: ReactNode;
@@ -13,34 +12,33 @@ interface Props {
 const pageSize = 4;
 
 export const GalleriesProvider: FC<Props> = ({ children }) => {
-  const { isLoading: galleriesIsFetching, galleries } = useFetchGalleries();
   const drawerService = useDrawerService();
 
   const isDrover = useMemo(
     () => drawerService.checkDrawer(DrawerType.CREATE_GALLERY),
     [drawerService],
   );
+  const { page, setPage } = usePageParam();
+  const { isLoading: galleriesIsFetching, response } = useFetchGalleries(page);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const { totalPages, paginationItems } =
-    usePaginationData<IGalleryCreateResponse>(
-      galleries || [],
-      pageSize,
-      currentPage,
-    );
+  const isLastOnPage = useMemo(() => response?.data.length === 1, [response]);
+  const isFullPage = useMemo(
+    () => response?.data.length === response?.meta.limit,
+    [response],
+  );
 
-  const isLastOnPage = useMemo(() => {
-    if (!galleries?.length) return false;
+  const totalPages = useMemo(() => {
+    if (!response) return 1;
 
-    return galleries.length % pageSize === 1;
-  }, [galleries]);
+    return Math.ceil(response.meta.total / response.meta.limit);
+  }, [response]);
 
   const decrementPageBy = (step: number) => {
-    setCurrentPage((prev) => Math.max(prev - step, 1));
+    setPage(Math.max(page - step, 1));
   };
 
   const incrementPageBy = (step: number) => {
-    setCurrentPage((prev) => Math.min(prev + step, totalPages));
+    setPage(Math.max(page + step, totalPages));
   };
 
   const handlePrev = () => {
@@ -52,24 +50,26 @@ export const GalleriesProvider: FC<Props> = ({ children }) => {
   };
 
   const onPageChangeHandler = (page: number) => {
-    setCurrentPage(page);
+    setPage(page);
   };
 
   return (
     <GalleriesContext.Provider
       value={{
-        galleries,
+        galleries: response?.data || [],
         galleriesIsFetching,
         isLastOnPage,
-        paginationItems,
+        isFullPage,
         pageSize,
         totalPages,
-        currentPage,
+        totalCount: response?.meta.total || 0,
+        currentPage: page,
         isDrover,
         handlePrev,
         handleNext,
         onPageChangeHandler,
         decrementPageBy,
+        incrementPageBy,
       }}
     >
       {children}

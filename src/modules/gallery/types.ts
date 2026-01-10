@@ -28,6 +28,22 @@ export interface IGalleryCreateResponse extends TBaseGallery {
   images?: CreatePhotoResponse[];
 }
 
+export interface IGalleriesCreateResponse extends TBaseGallery {
+  id: string;
+  createdAt: Date;
+  user?: { id: number };
+  images?: CreatePhotoResponse[];
+}
+
+export interface IGalleriesResponse {
+  data: IGalleriesCreateResponse[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
+
 export type GalleryPutFormControlNames = keyof TBaseGallery;
 export type GalleryPutFormControl = FormControl<GalleryPutFormControlNames>;
 
@@ -44,15 +60,17 @@ export interface CreatePhotoResponse {
 }
 
 export interface GalleryContextType {
-  galleries: IGalleryCreateResponse[] | undefined;
+  galleries: IGalleryCreateResponse[];
   galleriesIsFetching: boolean;
-  paginationItems: IGalleryCreateResponse[];
   isDrover: boolean;
   pageSize: number;
   totalPages: number;
+  totalCount: number;
   isLastOnPage: boolean;
+  isFullPage: boolean;
   currentPage: number;
   decrementPageBy: (step: number) => void;
+  incrementPageBy: (step: number) => void;
   handlePrev: () => void;
   handleNext: () => void;
   onPageChangeHandler: (page: number) => void;

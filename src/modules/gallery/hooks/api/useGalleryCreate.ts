@@ -9,18 +9,19 @@ import type {
 import { DrawerType } from "@/constants/drawer.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 
-export const useGalleryCreate = () => {
+export const useGalleryCreate = ({
+  onCreateSuccess,
+}: {
+  onCreateSuccess: () => void;
+}) => {
   const queryClient = useQueryClient();
   const galleryClient = useGalleryClient(queryClient);
   const drawerService = useDrawerService();
 
   const mutation = useMutation<IGalleryCreateResponse, Error, TBaseGallery>({
     mutationFn: galleryClient.createGallery,
-    onSuccess: (data) => {
-      galleryClient.setGalleriesData([
-        ...(galleryClient.getGalleriesData() || []),
-        data,
-      ]);
+    onSuccess: () => {
+      onCreateSuccess();
       mutation.reset();
       drawerService.closeDrawer(DrawerType.CREATE_GALLERY);
       toast.success("New gallery successfully created!");

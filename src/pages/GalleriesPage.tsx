@@ -13,9 +13,9 @@ export const GalleriesPage = () => {
     galleries,
     pageSize,
     totalPages,
+    totalCount,
     onPageChangeHandler,
     isDrover,
-    paginationItems,
     currentPage,
     handlePrev,
     handleNext,
@@ -45,13 +45,13 @@ export const GalleriesPage = () => {
           </div>
         </DrawerComponent>
         <div className={"w-full h-full overflow-scroll"}>
-          <GalleryList items={paginationItems} />
+          <GalleryList items={galleries} />
         </div>
 
         <div className={"p-2"}>
-          {galleries?.length ? (
+          {galleries.length ? (
             <PaginatorComponent
-              totalItems={galleries?.length || 0}
+              totalItems={totalCount}
               currentPage={currentPage}
               pageSize={pageSize}
               totalPages={totalPages}

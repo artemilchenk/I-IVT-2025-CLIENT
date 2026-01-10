@@ -28,6 +28,8 @@ import { useDrawerService } from "@/features/drawer/useDrawer.ts";
 import type { FC } from "react";
 import { cn } from "@/lib/utils.ts";
 import { useGalleryCreate } from "@/modules/gallery/hooks/api/useGalleryCreate.ts";
+import { useGalleries } from "@/modules/gallery/context.ts";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   className?: string;
@@ -36,7 +38,20 @@ interface Props {
 export const GalleryCreateForm: FC<Props> = ({
   className,
 }): React.ReactElement => {
-  const { isLoading, mutation } = useGalleryCreate();
+  const queryClient = useQueryClient();
+  const { isFullPage, currentPage, incrementPageBy } = useGalleries();
+
+  const { isLoading, mutation } = useGalleryCreate({
+    onCreateSuccess: () => {
+      if (isFullPage) {
+        incrementPageBy(1);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: ["galleries", currentPage],
+        });
+      }
+    },
+  });
 
   const form = useForm<z.infer<typeof baseGallerySchema>>({
     resolver: zodResolver(baseGallerySchema),

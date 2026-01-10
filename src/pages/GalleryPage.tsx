@@ -44,7 +44,10 @@ export function GalleryPage() {
               <Button
                 disabled={isCrtPhotoLoading}
                 onClick={() => {
-                  mutation.mutate({ buffer: "Picture4", galleryId: id || "" });
+                  mutation.mutate({
+                    buffer: Math.floor(Math.random() * 101) + "",
+                    galleryId: id || "",
+                  });
                 }}
               >
                 Add Photo

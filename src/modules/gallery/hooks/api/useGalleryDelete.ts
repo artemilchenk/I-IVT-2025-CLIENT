@@ -13,13 +13,8 @@ export const useGalleryDelete = ({
 
   const mutation = useMutation({
     mutationFn: galleryClient.deleteGallery,
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Successfully deleted!");
-      galleryClient.setGalleriesData(
-        (galleryClient.getGalleriesData() ?? []).filter(
-          (gallery) => gallery.id !== data.id,
-        ),
-      );
       onDeleteSuccess();
     },
     onError: (error) => {

@@ -21,7 +21,6 @@ export const usePhotoCreate = () => {
       await queryClient.invalidateQueries({
         queryKey: ["galleries"],
       });
-      console.log(galleryClient.getGalleriesData());
       toast.success("New photo successfully created!");
     },
     onError: (error) => {

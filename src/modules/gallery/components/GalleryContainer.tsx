@@ -9,6 +9,7 @@ import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { ConfirmPrompt } from "@/components/ConfirmPrompt.tsx";
 import { useGalleryDelete } from "@/modules/gallery/hooks/api/useGalleryDelete.ts";
 import { useGalleries } from "@/modules/gallery/context.ts";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   container: Container;
@@ -18,10 +19,18 @@ interface Props {
 export const GalleryContainer: FC<Props> = ({ container, children }) => {
   const navigate = useNavigate();
   const drawerService = useDrawerService();
-  const { isLastOnPage, decrementPageBy } = useGalleries();
+  const { isLastOnPage, decrementPageBy, currentPage } = useGalleries();
+  const queryClient = useQueryClient();
+
   const { isLoading, mutation } = useGalleryDelete({
     onDeleteSuccess: () => {
-      if (isLastOnPage) decrementPageBy(1);
+      if (isLastOnPage) {
+        decrementPageBy(1);
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: ["galleries", currentPage],
+        });
+      }
     },
   });
 
