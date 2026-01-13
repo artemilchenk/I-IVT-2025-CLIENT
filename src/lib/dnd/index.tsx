@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 export type Item = {
   id: string;
@@ -92,6 +92,10 @@ export function MultiContainerDnD({
     onChange(newData);
     setActiveItem(null);
   };
+
+  useEffect(() => {
+    setLocalData(data);
+  }, [data]);
 
   return (
     <DndContext
