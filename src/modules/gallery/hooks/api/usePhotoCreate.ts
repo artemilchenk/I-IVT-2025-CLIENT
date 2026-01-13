@@ -1,22 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useGalleryClient } from "@/modules/gallery/hooks/useGalleryClient.ts";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 import type {
   CreatePhotoResponse,
   PhotoInput,
 } from "@/modules/gallery/types.ts";
+import { galleryApi } from "@/modules/gallery/GalleryApi.ts";
 
 export const usePhotoCreate = () => {
   const queryClient = useQueryClient();
-  const galleryClient = useGalleryClient(queryClient);
 
   const mutation = useMutation<
     CreatePhotoResponse,
     Error,
     PhotoInput & { galleryId: string }
   >({
-    mutationFn: galleryClient.createPhoto,
+    mutationFn: galleryApi.createPhoto,
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["galleries"],

@@ -10,7 +10,6 @@ export const GalleriesPage = () => {
   const drawerService = useDrawerService();
   const {
     galleriesIsFetching,
-    galleries,
     pageSize,
     totalPages,
     totalCount,
@@ -45,11 +44,11 @@ export const GalleriesPage = () => {
           </div>
         </DrawerComponent>
         <div className={"w-full h-full overflow-scroll"}>
-          <GalleryList items={galleries} />
+          <GalleryList />
         </div>
 
         <div className={"p-2"}>
-          {galleries.length ? (
+          {totalCount ? (
             <PaginatorComponent
               totalItems={totalCount}
               currentPage={currentPage}

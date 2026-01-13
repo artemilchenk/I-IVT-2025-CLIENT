@@ -28,6 +28,11 @@ export interface IGalleryCreateResponse extends TBaseGallery {
   images?: CreatePhotoResponse[];
 }
 
+export interface PhotoMoveDto {
+  id: string;
+  targetContainerId: string;
+}
+
 export interface IGalleriesCreateResponse extends TBaseGallery {
   id: string;
   createdAt: Date;

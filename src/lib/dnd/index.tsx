@@ -1,14 +1,14 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 export type Item = {
   id: string;
-  label: string;
+  label?: string;
 };
 
 export type Container = {
   id: string;
-  title: string;
   items: Item[];
+  title?: string;
 };
 
 function findContainerByItemId(containers: Container[], itemId: string) {
@@ -32,11 +32,12 @@ import {
 export function MultiContainerDnD({
   render,
   data,
+  onChange,
 }: {
   data: Container[];
   render: (args: { containers: Container[] }) => ReactNode;
+  onChange: (data: Container[]) => void;
 }) {
-  const [containers, setContainers] = useState<Container[]>(data);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
 
   const sensors = useSensors(
@@ -59,41 +60,36 @@ export function MultiContainerDnD({
     const activeItemId = active.id as string;
     const overId = over.id as string;
 
-    const sourceContainer = findContainerByItemId(containers, activeItemId);
+    const sourceContainer = findContainerByItemId(data, activeItemId);
     const targetContainer =
-      findContainerById(containers, overId) ??
-      findContainerByItemId(containers, overId);
+      findContainerById(data, overId) ?? findContainerByItemId(data, overId);
 
     if (!sourceContainer || !targetContainer) return;
     if (sourceContainer.id === targetContainer.id) return;
 
-    setContainers((prev) => {
-      const item = sourceContainer.items.find((i) => i.id === activeItemId)!;
+    const item = sourceContainer.items.find((i) => i.id === activeItemId)!;
 
-      return prev.map((container) => {
-        if (container.id === sourceContainer.id) {
-          return {
-            ...container,
-            items: container.items.filter((i) => i.id !== activeItemId),
-          };
-        }
+    const newData = data.map((container) => {
+      if (container.id === sourceContainer.id) {
+        return {
+          ...container,
+          items: container.items.filter((i) => i.id !== activeItemId),
+        };
+      }
 
-        if (container.id === targetContainer.id) {
-          return {
-            ...container,
-            items: [...container.items, item],
-          };
-        }
+      if (container.id === targetContainer.id) {
+        return {
+          ...container,
+          items: [...container.items, item],
+        };
+      }
 
-        return container;
-      });
+      return container;
     });
+
+    onChange(newData);
     setActiveItem(null);
   };
-
-  useEffect(() => {
-    setContainers(data);
-  }, [data]);
 
   return (
     <DndContext
@@ -102,7 +98,7 @@ export function MultiContainerDnD({
       onDragStart={handleDragStart}
       onDragCancel={handleDragCancel}
     >
-      {render({ containers })}
+      {render({ containers: data })}
 
       <DragOverlay>
         {activeItem ? (

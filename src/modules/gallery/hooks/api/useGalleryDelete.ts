@@ -1,18 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useGalleryClient } from "@/modules/gallery/hooks/useGalleryClient.ts";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
+import { galleryApi } from "@/modules/gallery/GalleryApi.ts";
 
 export const useGalleryDelete = ({
   onDeleteSuccess,
 }: {
   onDeleteSuccess: () => void;
 }) => {
-  const queryClient = useQueryClient();
-  const galleryClient = useGalleryClient(queryClient);
-
   const mutation = useMutation({
-    mutationFn: galleryClient.deleteGallery,
+    mutationFn: galleryApi.deleteGallery,
     onSuccess: () => {
       toast.success("Successfully deleted!");
       onDeleteSuccess();

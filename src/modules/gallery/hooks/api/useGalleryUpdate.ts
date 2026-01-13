@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useGalleryClient } from "@/modules/gallery/hooks/useGalleryClient.ts";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 import type {
@@ -9,10 +8,10 @@ import type {
 
 import { DrawerType } from "@/constants/drawer.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
+import { galleryApi } from "@/modules/gallery/GalleryApi.ts";
 
 export const useGalleryUpdate = () => {
   const queryClient = useQueryClient();
-  const galleryClient = useGalleryClient(queryClient);
   const drawerService = useDrawerService();
 
   const mutation = useMutation<
@@ -20,7 +19,7 @@ export const useGalleryUpdate = () => {
     Error,
     { dto: TBaseGallery; id: string }
   >({
-    mutationFn: galleryClient.updateGallery,
+    mutationFn: galleryApi.updateGallery,
     onSuccess: async (_data, variables) => {
       await queryClient.invalidateQueries({
         queryKey: ["gallery", variables.id],

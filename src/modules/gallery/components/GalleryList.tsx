@@ -1,34 +1,56 @@
-import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
-import { type FC, useMemo } from "react";
-import { MultiContainerDnD } from "@/lib/dnd";
+import type { IGalleriesResponse } from "@/modules/gallery/types.ts";
+import { type Container, MultiContainerDnD } from "@/lib/dnd";
 import { DroppableContainer } from "@/lib/dnd/dc.tsx";
 import { DraggableItem } from "@/lib/dnd/di.tsx";
 import { GalleryContainer } from "@/modules/gallery/components/GalleryContainer.tsx";
 import { GalleryMultiContainerDnD } from "@/modules/gallery/components/GalleryMultiContainerDnD.tsx";
+import { useGalleries } from "@/modules/gallery/context.ts";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 
-interface Props {
-  items: IGalleryCreateResponse[];
-}
+export const GalleryList = () => {
+  const queryClient = useQueryClient();
+  const { currentPage, galleries } = useGalleries();
 
-export const GalleryList: FC<Props> = ({ items }) => {
+  const onDataChange = (newData: Container[]) => {
+    if (!newData) return;
+
+    queryClient.setQueriesData(
+      { queryKey: ["galleries", currentPage] },
+      (prev: IGalleriesResponse) =>
+        prev
+          ? {
+              ...prev,
+              data: newData.map((container) => {
+                const { items, ...rest } = container;
+                return { ...rest, images: items };
+              }),
+            }
+          : prev,
+    );
+  };
+
   const dndData = useMemo(() => {
     return (
-      items?.map((container) => {
+      galleries.map((container) => {
+        const { images, ...rest } = container;
         return {
-          id: container.id,
-          title: container.title,
+          ...rest,
           items:
-            container.images?.map((imageItem) => ({
-              id: imageItem.id,
-              label: imageItem.originalFilename,
-            })) || [],
+            images?.map((imageItem) => {
+              return {
+                ...imageItem,
+                label: imageItem.originalFilename,
+              };
+            }) || [],
         };
       }) || []
     );
-  }, [items]);
+  }, [galleries]);
 
   return (
     <MultiContainerDnD
+      onChange={onDataChange}
       data={dndData}
       render={({ containers }) => (
         <GalleryMultiContainerDnD>

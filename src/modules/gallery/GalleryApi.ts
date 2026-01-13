@@ -7,11 +7,10 @@ import type {
   PhotoInput,
   TBaseGallery,
 } from "@/modules/gallery/types.ts";
-import type { QueryClient } from "@tanstack/react-query";
 import { tokenService } from "@/services/tokenService.ts";
 
-export class GalleryClient {
-  constructor(queryClient: QueryClient) {}
+export class GalleryApi {
+  constructor() {}
 
   async deleteGallery(id: string): Promise<{ id: string }> {
     const token = tokenService.getToken();
@@ -74,6 +73,27 @@ export class GalleryClient {
     return response.data;
   }
 
+  async movePhoto({
+    id,
+    targetContainerId,
+  }: {
+    id: string;
+    targetContainerId: string;
+  }): Promise<CreatePhotoResponse> {
+    const token = tokenService.getToken();
+
+    const response = await axios.post<CreatePhotoResponse>(
+      `${httpClient.baseUrl}/gallery/move`,
+      { id, targetContainerId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  }
+
   async fetchGalleries(page: number): Promise<IGalleriesResponse> {
     const token = tokenService.getToken();
 
@@ -116,3 +136,5 @@ export class GalleryClient {
     return response.data;
   }
 }
+
+export const galleryApi = new GalleryApi();
