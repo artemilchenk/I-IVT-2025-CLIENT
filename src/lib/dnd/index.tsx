@@ -39,6 +39,7 @@ export function MultiContainerDnD({
   onChange: (data: Container[]) => void;
 }) {
   const [activeItem, setActiveItem] = useState<Item | null>(null);
+  const [localData, setLocalData] = useState<Container[]>(data);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -69,7 +70,7 @@ export function MultiContainerDnD({
 
     const item = sourceContainer.items.find((i) => i.id === activeItemId)!;
 
-    const newData = data.map((container) => {
+    const newData = localData.map((container) => {
       if (container.id === sourceContainer.id) {
         return {
           ...container,
@@ -87,6 +88,7 @@ export function MultiContainerDnD({
       return container;
     });
 
+    setLocalData(newData);
     onChange(newData);
     setActiveItem(null);
   };
@@ -98,7 +100,7 @@ export function MultiContainerDnD({
       onDragStart={handleDragStart}
       onDragCancel={handleDragCancel}
     >
-      {render({ containers: data })}
+      {render({ containers: localData })}
 
       <DragOverlay>
         {activeItem ? (

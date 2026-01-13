@@ -30,7 +30,7 @@ export const GalleryList = () => {
     );
   };
 
-  const dndData = useMemo(() => {
+  const dndData: Container[] = useMemo(() => {
     return (
       galleries.map((container) => {
         const { images, ...rest } = container;
