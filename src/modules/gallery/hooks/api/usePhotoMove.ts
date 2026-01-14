@@ -37,10 +37,7 @@ export const usePhotoMove = ({ onSuccess }: { onSuccess: () => void }) => {
           prev
             ? {
                 ...prev,
-                data: vars.optimisticData.map((container) => {
-                  const { items, ...rest } = container;
-                  return { ...rest, images: items };
-                }),
+                data: vars.optimisticData,
               }
             : prev,
       );

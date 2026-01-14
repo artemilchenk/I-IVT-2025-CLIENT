@@ -2,13 +2,13 @@ import { type ReactNode, useEffect, useState } from "react";
 
 export type Item = {
   id: string;
-  title?: string;
+  title: string;
 };
 
 export type Container = {
   id: string;
   items: Item[];
-  title?: string;
+  title: string;
 };
 
 export type DataChangeEvent = {

@@ -10,6 +10,7 @@ import { GalleryMultiContainerDnD } from "@/modules/gallery/components/GalleryMu
 import { useGalleries } from "@/modules/gallery/context.ts";
 import { useMemo } from "react";
 import { usePhotoMove } from "@/modules/gallery/hooks/api/usePhotoMove.ts";
+import type { IGalleryCreateResponse } from "@/modules/gallery/types.ts";
 
 export const GalleryList = () => {
   const { galleries } = useGalleries();
@@ -20,10 +21,19 @@ export const GalleryList = () => {
   const onDataChange = (event: DataChangeEvent) => {
     if (!event.data) return;
 
+    const optimisticData = event.data.map((container) => {
+      const { items, ...rest } = container;
+      return {
+        ...rest,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        images: items.map(({ title: _, ...rest }) => rest),
+      } as IGalleryCreateResponse;
+    });
+
     mutation.mutate({
       id: event.activeItemId,
       targetContainerId: event.targetContainerId,
-      optimisticData: event.data,
+      optimisticData,
     });
   };
 
@@ -37,6 +47,7 @@ export const GalleryList = () => {
             images?.map((imageItem) => {
               return {
                 ...imageItem,
+                title: imageItem.originalFilename,
               };
             }) || [],
         };

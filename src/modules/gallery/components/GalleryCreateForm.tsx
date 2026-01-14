@@ -39,12 +39,13 @@ export const GalleryCreateForm: FC<Props> = ({
   className,
 }): React.ReactElement => {
   const queryClient = useQueryClient();
-  const { isFullPage, currentPage, incrementPageBy } = useGalleries();
+  const { isFullPage, currentPage, incrementPageBy, totalPages } =
+    useGalleries();
 
   const { isLoading, mutation } = useGalleryCreate({
     onCreateSuccess: () => {
       if (isFullPage) {
-        incrementPageBy(1);
+        incrementPageBy(totalPages - currentPage || 1);
       } else {
         queryClient.invalidateQueries({
           queryKey: ["galleries", currentPage],

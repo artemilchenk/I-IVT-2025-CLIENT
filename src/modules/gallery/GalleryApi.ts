@@ -83,7 +83,7 @@ export class GalleryApi {
     const token = tokenService.getToken();
 
     const response = await axios.post<CreatePhotoResponse>(
-      `${httpClient.baseUrl}/gallery/move`,
+      `${httpClient.baseUrl}/gallery/photo/move`,
       { id, targetContainerId },
       {
         headers: {
