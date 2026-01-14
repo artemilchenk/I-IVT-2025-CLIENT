@@ -2,13 +2,19 @@ import { type ReactNode, useEffect, useState } from "react";
 
 export type Item = {
   id: string;
-  label?: string;
+  title?: string;
 };
 
 export type Container = {
   id: string;
   items: Item[];
   title?: string;
+};
+
+export type DataChangeEvent = {
+  data: Container[];
+  activeItemId: string;
+  targetContainerId: string;
 };
 
 function findContainerByItemId(containers: Container[], itemId: string) {
@@ -36,7 +42,7 @@ export function MultiContainerDnD({
 }: {
   data: Container[];
   render: (args: { containers: Container[] }) => ReactNode;
-  onChange: (data: Container[]) => void;
+  onChange: (event: DataChangeEvent) => void;
 }) {
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [localData, setLocalData] = useState<Container[]>(data);
@@ -89,7 +95,11 @@ export function MultiContainerDnD({
     });
 
     setLocalData(newData);
-    onChange(newData);
+    onChange({
+      data: newData,
+      activeItemId,
+      targetContainerId: overId,
+    });
     setActiveItem(null);
   };
 
@@ -109,7 +119,7 @@ export function MultiContainerDnD({
       <DragOverlay>
         {activeItem ? (
           <div className="dnd-item p-2 bg-green-200 shadow-lg min-h-30">
-            {activeItem.label}
+            {activeItem.title}
           </div>
         ) : null}
       </DragOverlay>

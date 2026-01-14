@@ -3,6 +3,7 @@ import { type baseGallerySchema } from "@/modules/gallery/schema.ts";
 
 import type { HTMLInputTypeAttribute } from "react";
 import { FormType } from "@/constants/form.ts";
+import type { Container } from "@/lib/dnd";
 
 export interface FormControl<T> {
   id: number;
@@ -31,6 +32,7 @@ export interface IGalleryCreateResponse extends TBaseGallery {
 export interface PhotoMoveDto {
   id: string;
   targetContainerId: string;
+  optimisticData: Container[];
 }
 
 export interface IGalleriesCreateResponse extends TBaseGallery {

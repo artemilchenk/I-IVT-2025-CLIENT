@@ -1,33 +1,30 @@
-import type { IGalleriesResponse } from "@/modules/gallery/types.ts";
-import { type Container, MultiContainerDnD } from "@/lib/dnd";
+import {
+  type Container,
+  type DataChangeEvent,
+  MultiContainerDnD,
+} from "@/lib/dnd";
 import { DroppableContainer } from "@/lib/dnd/dc.tsx";
 import { DraggableItem } from "@/lib/dnd/di.tsx";
 import { GalleryContainer } from "@/modules/gallery/components/GalleryContainer.tsx";
 import { GalleryMultiContainerDnD } from "@/modules/gallery/components/GalleryMultiContainerDnD.tsx";
 import { useGalleries } from "@/modules/gallery/context.ts";
-import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { usePhotoMove } from "@/modules/gallery/hooks/api/usePhotoMove.ts";
 
 export const GalleryList = () => {
-  const queryClient = useQueryClient();
-  const { currentPage, galleries } = useGalleries();
+  const { galleries } = useGalleries();
+  const { mutation } = usePhotoMove({
+    onSuccess: () => {},
+  });
 
-  const onDataChange = (newData: Container[]) => {
-    if (!newData) return;
+  const onDataChange = (event: DataChangeEvent) => {
+    if (!event.data) return;
 
-    queryClient.setQueriesData(
-      { queryKey: ["galleries", currentPage] },
-      (prev: IGalleriesResponse) =>
-        prev
-          ? {
-              ...prev,
-              data: newData.map((container) => {
-                const { items, ...rest } = container;
-                return { ...rest, images: items };
-              }),
-            }
-          : prev,
-    );
+    mutation.mutate({
+      id: event.activeItemId,
+      targetContainerId: event.targetContainerId,
+      optimisticData: event.data,
+    });
   };
 
   const dndData: Container[] = useMemo(() => {
@@ -40,7 +37,6 @@ export const GalleryList = () => {
             images?.map((imageItem) => {
               return {
                 ...imageItem,
-                label: imageItem.originalFilename,
               };
             }) || [],
         };
@@ -64,7 +60,7 @@ export const GalleryList = () => {
                     sourceContainerId={container.id}
                   >
                     <div className="dnd-item p-2 bg-green-200 min-h-30">
-                      {item.label}
+                      {item.title}
                     </div>
                   </DraggableItem>
                 ))}
