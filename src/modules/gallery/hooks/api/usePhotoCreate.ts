@@ -2,16 +2,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 import type {
-  CreatePhotoResponse,
   PhotoInput,
+  UploadPhotoResponse,
 } from "@/modules/gallery/types.ts";
 import { galleryApi } from "@/modules/gallery/GalleryApi.ts";
 
-export const usePhotoCreate = () => {
+export const usePhotoUpload = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<
-    CreatePhotoResponse,
+    UploadPhotoResponse,
     Error,
     PhotoInput & { galleryId: string }
   >({

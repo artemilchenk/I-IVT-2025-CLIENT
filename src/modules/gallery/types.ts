@@ -54,10 +54,10 @@ export type GalleryPutFormControlNames = keyof TBaseGallery;
 export type GalleryPutFormControl = FormControl<GalleryPutFormControlNames>;
 
 export interface PhotoInput {
-  buffer: string;
+  file: File;
 }
 
-export interface CreatePhotoResponse {
+export interface UploadPhotoResponse {
   id: string;
   path: string;
   galleryId: string;

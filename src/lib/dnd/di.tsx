@@ -34,6 +34,7 @@ export function DraggableItem({
 
   return (
     <div
+      className={"h-fit"}
       onClick={(event) => {
         event.stopPropagation();
       }}
