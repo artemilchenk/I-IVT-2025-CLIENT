@@ -25,7 +25,7 @@ export interface IGalleryCreateResponse extends TBaseGallery {
   id: string;
   createdAt: Date;
   user?: { id: number };
-  images?: CreatePhotoResponse[];
+  images?: UploadPhotoResponse[];
 }
 
 export interface PhotoMoveDto {
@@ -38,7 +38,7 @@ export interface IGalleriesCreateResponse extends TBaseGallery {
   id: string;
   createdAt: Date;
   user?: { id: number };
-  images?: CreatePhotoResponse[];
+  images?: UploadPhotoResponse[];
 }
 
 export interface IGalleriesResponse {

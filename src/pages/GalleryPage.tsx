@@ -25,7 +25,7 @@ export function GalleryPage() {
   const [fileData, setFileData] = useState<LoadData | null>(null);
 
   const drawerService = useDrawerService();
-  const { isLoading: isCrtPhotoLoading, mutation } = usePhotoUpload();
+  const { mutation, isLoading: isPhotoUploading } = usePhotoUpload();
 
   const { isLoading, gallery } = useFetchGallery(id || "");
 
@@ -71,23 +71,27 @@ export function GalleryPage() {
               onLoaded={(data) => {
                 setFileData(data);
               }}
+              onClose={() => setFileData(null)}
               onError={(error) => {
                 toast.error(error);
               }}
             />
 
-            <Button
-              onClick={() => {
-                if (!fileData || !id) return;
+            {fileData && (
+              <Button
+                disabled={isPhotoUploading}
+                onClick={() => {
+                  if (!fileData || !id) return;
 
-                mutation.mutate({
-                  file: fileData.loadedFile,
-                  galleryId: id,
-                });
-              }}
-            >
-              Upload Photo
-            </Button>
+                  mutation.mutate({
+                    file: fileData.loadedFile,
+                    galleryId: id,
+                  });
+                }}
+              >
+                Upload Photo
+              </Button>
+            )}
           </div>
         </div>
       </Modal>
@@ -115,7 +119,6 @@ export function GalleryPage() {
               </Button>
 
               <Button
-                disabled={isCrtPhotoLoading}
                 onClick={() => {
                   navigate(ROUTES.PHOTOS_ID(id).path);
                 }}

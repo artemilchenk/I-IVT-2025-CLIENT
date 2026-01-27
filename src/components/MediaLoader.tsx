@@ -45,6 +45,7 @@ export const MediaLoader = ({
   renderLoading,
   renderSuccess,
   renderIdle,
+  onClose,
 }: MediaLoaderProps) => {
   const { isLoading, loadFile, data, error } = useMediaLoader();
   const imagePreview = useMemo(() => {
@@ -81,10 +82,14 @@ export const MediaLoader = ({
     if (error && onError) onError(error);
   }, [error, onError]);
 
+  useEffect(() => {
+    return () => {
+      if (onClose) onClose();
+    };
+  }, []);
+
   return (
     <div className={"flex justify-center w-full h-full "}>
-      <input type="text" style={{ display: "none" }} onChange={handleChange} />
-
       <input
         type="file"
         accept={`${type}/*`}
@@ -95,13 +100,13 @@ export const MediaLoader = ({
 
       {/* STATE MACHINE */}
       {!data && !isLoading && (
-        <div onClick={openFileDialog}>
+        <span onClick={openFileDialog}>
           {renderIdle ? (
             renderIdle()
           ) : (
             <ImagePreview src={loaderIcon} width={100} height={100} />
           )}
-        </div>
+        </span>
       )}
 
       {isLoading &&

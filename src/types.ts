@@ -34,6 +34,7 @@ export type SuccessProps = {
 export type MediaLoaderProps = {
   type: MediaLoaderTypes;
   onLoaded: (data: LoadData) => void;
+  onClose?: () => void;
   onIsLoading?: (value: boolean) => void;
   onError?: (value: string) => void;
 
