@@ -69,7 +69,7 @@ export const MediaLoader = ({
 
   //onLoaded
   useEffect(() => {
-    if (data) onLoaded(data);
+    if (data) onLoaded(data.loadedFile);
   }, [data, onLoaded]);
 
   //isLoading

@@ -22,10 +22,6 @@ export type ImagePreviewProps = {
   height?: number | string;
 };
 
-export type IdleProps = {
-  openFileDialog: () => void;
-};
-
 export type SuccessProps = {
   data: LoadData;
   type: MediaLoaderTypes;
@@ -33,7 +29,7 @@ export type SuccessProps = {
 
 export type MediaLoaderProps = {
   type: MediaLoaderTypes;
-  onLoaded: (data: LoadData) => void;
+  onLoaded: (file: File) => void;
   onClose?: () => void;
   onIsLoading?: (value: boolean) => void;
   onError?: (value: string) => void;

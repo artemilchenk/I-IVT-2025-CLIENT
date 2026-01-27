@@ -6,15 +6,19 @@ export function useMediaLoader(): MediaLoaderState {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const reset = () => {
-    setData(null);
-  };
   const revokePreview = () => {
-    reset();
+    if (data?.previewUrl) {
+      URL.revokeObjectURL(data.previewUrl);
+    }
+  };
+
+  const reset = () => {
+    revokePreview();
+    setData(null);
   };
 
   const loadFile = async (file: File) => {
-    revokePreview();
+    reset();
 
     setIsLoading(true);
 
@@ -34,7 +38,7 @@ export function useMediaLoader(): MediaLoaderState {
         setError(err.message);
       } else {
         setError("Something went wrong");
-        revokePreview();
+        reset();
       }
     } finally {
       setIsLoading(false);
@@ -43,7 +47,7 @@ export function useMediaLoader(): MediaLoaderState {
 
   useEffect(() => {
     return () => {
-      revokePreview();
+      reset();
     };
   }, []);
 

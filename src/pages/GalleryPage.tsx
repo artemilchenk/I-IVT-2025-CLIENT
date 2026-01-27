@@ -16,13 +16,12 @@ import { MediaLoader } from "@/components/MediaLoader.tsx";
 import Modal from "react-modal";
 import { toast } from "sonner";
 import { useState } from "react";
-import type { LoadData } from "@/types.ts";
 
 export function GalleryPage() {
   const modalService = useModalService();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [fileData, setFileData] = useState<LoadData | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const drawerService = useDrawerService();
   const { mutation, isLoading: isPhotoUploading } = usePhotoUpload();
@@ -60,31 +59,31 @@ export function GalleryPage() {
           <div
             className={"loader flex flex-col items-center gap-3 justify-center"}
           >
-            {fileData && (
+            {file && (
               <h2>
-                <span>{fileData.loadedFile.name}</span>
+                <span>{file.name}</span>
               </h2>
             )}
 
             <MediaLoader
               type={"image"}
-              onLoaded={(data) => {
-                setFileData(data);
+              onLoaded={(file) => {
+                setFile(file);
               }}
-              onClose={() => setFileData(null)}
+              onClose={() => setFile(null)}
               onError={(error) => {
                 toast.error(error);
               }}
             />
 
-            {fileData && (
+            {file && (
               <Button
                 disabled={isPhotoUploading}
                 onClick={() => {
-                  if (!fileData || !id) return;
+                  if (!file || !id) return;
 
                   mutation.mutate({
-                    file: fileData.loadedFile,
+                    file,
                     galleryId: id,
                   });
                 }}
