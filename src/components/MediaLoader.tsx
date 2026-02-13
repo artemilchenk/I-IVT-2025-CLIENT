@@ -82,6 +82,7 @@ export const MediaLoader = ({
     if (error && onError) onError(error);
   }, [error, onError]);
 
+  //onUnmount
   useEffect(() => {
     return () => {
       if (onClose) onClose();

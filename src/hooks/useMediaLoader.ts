@@ -23,10 +23,6 @@ export function useMediaLoader(): MediaLoaderState {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
-      });
-
       const url = URL.createObjectURL(file);
 
       setData({

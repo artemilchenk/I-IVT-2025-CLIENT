@@ -1,10 +1,9 @@
 import axios from "axios";
 import { httpClient } from "@/services/httpClient.ts";
 import type {
-  CreatePhotoResponse,
+  UploadPhotoResponse,
   IGalleriesResponse,
   IGalleryCreateResponse,
-  PhotoInput,
   TBaseGallery,
 } from "@/modules/gallery/types.ts";
 import { tokenService } from "@/services/tokenService.ts";
@@ -38,10 +37,19 @@ export class GalleryApi {
     return response.data;
   }
 
-  createPhoto = async (value: PhotoInput & { galleryId: string }) => {
-    return await this.create<PhotoInput, CreatePhotoResponse>(
-      { buffer: value.buffer },
-      `/gallery/photo/${value.galleryId}`,
+  uploadPhoto = async ({
+    file,
+    galleryId,
+  }: {
+    file: File;
+    galleryId: string;
+  }) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    return await this.create<FormData, UploadPhotoResponse>(
+      formData,
+      `/gallery/photo/${galleryId}`,
     );
   };
 
@@ -79,10 +87,10 @@ export class GalleryApi {
   }: {
     id: string;
     targetContainerId: string;
-  }): Promise<CreatePhotoResponse> {
+  }): Promise<UploadPhotoResponse> {
     const token = tokenService.getToken();
 
-    const response = await axios.post<CreatePhotoResponse>(
+    const response = await axios.post<UploadPhotoResponse>(
       `${httpClient.baseUrl}/gallery/photo/move`,
       { id, targetContainerId },
       {
@@ -108,10 +116,10 @@ export class GalleryApi {
     return response.data;
   }
 
-  async fetchPhotos(galleryId: string): Promise<CreatePhotoResponse[]> {
+  async fetchPhotos(galleryId: string): Promise<UploadPhotoResponse[]> {
     const token = tokenService.getToken();
 
-    const response = await axios.get<CreatePhotoResponse[]>(
+    const response = await axios.get<UploadPhotoResponse[]>(
       `${httpClient.baseUrl}/gallery/${galleryId}/photos`,
       {
         headers: {

@@ -28,7 +28,6 @@ function findContainerById(containers: Container[], containerId: string) {
 import {
   DndContext,
   type DragEndEvent,
-  DragOverlay,
   type DragStartEvent,
   PointerSensor,
   useSensor,
@@ -37,11 +36,13 @@ import {
 
 export function MultiContainerDnD({
   render,
+  renderOverlay,
   data,
   onChange,
 }: {
   data: Container[];
   render: (args: { containers: Container[] }) => ReactNode;
+  renderOverlay: (args: { activeItem: Item | null }) => ReactNode;
   onChange: (event: DataChangeEvent) => void;
 }) {
   const [activeItem, setActiveItem] = useState<Item | null>(null);
@@ -115,14 +116,7 @@ export function MultiContainerDnD({
       onDragCancel={handleDragCancel}
     >
       {render({ containers: localData })}
-
-      <DragOverlay>
-        {activeItem ? (
-          <div className="dnd-item p-2 bg-green-200 shadow-lg min-h-30">
-            {activeItem.title}
-          </div>
-        ) : null}
-      </DragOverlay>
+      {renderOverlay({ activeItem })}
     </DndContext>
   );
 }

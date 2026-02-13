@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
-import type {
-  PhotoInput,
-  UploadPhotoResponse,
-} from "@/modules/gallery/types.ts";
+import type { UploadPhotoResponse } from "@/modules/gallery/types.ts";
 import { galleryApi } from "@/modules/gallery/GalleryApi.ts";
 
 export const usePhotoUpload = () => {
@@ -13,9 +10,9 @@ export const usePhotoUpload = () => {
   const mutation = useMutation<
     UploadPhotoResponse,
     Error,
-    PhotoInput & { galleryId: string }
+    { file: File; galleryId: string }
   >({
-    mutationFn: galleryApi.createPhoto,
+    mutationFn: galleryApi.uploadPhoto,
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["galleries"],
