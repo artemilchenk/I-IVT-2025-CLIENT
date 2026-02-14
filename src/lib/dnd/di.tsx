@@ -1,14 +1,13 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import type { ReactNode } from "react";
-import type { Item } from "@/lib/dnd/index.tsx";
 
-export function DraggableItem({
+export function DraggableItem<TItem extends { id: string }>({
   item,
   sourceContainerId,
   children,
 }: {
-  item: Item;
+  item: TItem;
   sourceContainerId: string;
   children: ReactNode;
 }) {

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { handleError } from "@/sheared";
 import type {
-  CreatePhotoResponse,
+  UploadPhotoResponse,
   IGalleriesResponse,
   PhotoMoveDto,
 } from "@/modules/gallery/types.ts";
@@ -17,7 +17,7 @@ export const usePhotoMove = ({ onSuccess }: { onSuccess: () => void }) => {
   const { currentPage } = useGalleries();
   const queryClient = useQueryClient();
   const mutation = useMutation<
-    CreatePhotoResponse,
+    UploadPhotoResponse,
     Error,
     PhotoMoveDto,
     RollbackContext
@@ -37,7 +37,7 @@ export const usePhotoMove = ({ onSuccess }: { onSuccess: () => void }) => {
           prev
             ? {
                 ...prev,
-                data: vars.optimisticData,
+                data: vars.data,
               }
             : prev,
       );

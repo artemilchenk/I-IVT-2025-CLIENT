@@ -1,29 +1,10 @@
 import { type ReactNode, useEffect, useState } from "react";
 
-export type Item = {
-  id: string;
-  title: string;
-};
-
-export type Container = {
-  id: string;
-  items: Item[];
-  title: string;
-};
-
-export type DataChangeEvent = {
-  data: Container[];
+export type DataChangeEvent<TContainer> = {
+  data: TContainer[];
   activeItemId: string;
   targetContainerId: string;
 };
-
-function findContainerByItemId(containers: Container[], itemId: string) {
-  return containers.find((c) => c.items.some((item) => item.id === itemId));
-}
-
-function findContainerById(containers: Container[], containerId: string) {
-  return containers.find((c) => c.id === containerId);
-}
 
 import {
   DndContext,
@@ -34,25 +15,42 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 
-export function MultiContainerDnD({
+export function MultiContainerDnD<
+  TContainer extends { id: string },
+  TItem extends { id: string },
+>({
   render,
   renderOverlay,
   data,
   onChange,
+  getItems,
+  setItems,
 }: {
-  data: Container[];
-  render: (args: { containers: Container[] }) => ReactNode;
-  renderOverlay: (args: { activeItem: Item | null }) => ReactNode;
-  onChange: (event: DataChangeEvent) => void;
+  data: TContainer[];
+  render: (args: { containers: TContainer[] }) => ReactNode;
+  renderOverlay: (args: { activeItem: TItem | null }) => ReactNode;
+  onChange: (event: DataChangeEvent<TContainer>) => void;
+  getItems: (container: TContainer) => TItem[];
+  setItems: (container: TContainer, items: TItem[]) => TContainer;
 }) {
-  const [activeItem, setActiveItem] = useState<Item | null>(null);
-  const [localData, setLocalData] = useState<Container[]>(data);
+  const [activeItem, setActiveItem] = useState<TItem | null>(null);
+  const [localData, setLocalData] = useState<TContainer[]>(data);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 },
     }),
   );
+
+  const findContainerByItemId = (itemId: string) => {
+    return localData.find((container) =>
+      getItems(container).some((item) => item.id === itemId),
+    );
+  };
+
+  const findContainerById = (containerId: string) => {
+    return localData.find((container) => container.id === containerId);
+  };
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveItem(active.data.current?.item ?? null);
@@ -68,28 +66,29 @@ export function MultiContainerDnD({
     const activeItemId = active.id as string;
     const overId = over.id as string;
 
-    const sourceContainer = findContainerByItemId(data, activeItemId);
+    const sourceContainer = findContainerByItemId(activeItemId);
+
     const targetContainer =
-      findContainerById(data, overId) ?? findContainerByItemId(data, overId);
+      findContainerById(overId) ?? findContainerByItemId(overId);
 
     if (!sourceContainer || !targetContainer) return;
+
     if (sourceContainer.id === targetContainer.id) return;
 
-    const item = sourceContainer.items.find((i) => i.id === activeItemId)!;
+    const item = getItems(sourceContainer).find((i) => i.id === activeItemId);
+
+    if (!item) return;
 
     const newData = localData.map((container) => {
       if (container.id === sourceContainer.id) {
-        return {
-          ...container,
-          items: container.items.filter((i) => i.id !== activeItemId),
-        };
+        return setItems(
+          container,
+          getItems(container).filter((i) => i.id !== activeItemId),
+        );
       }
 
       if (container.id === targetContainer.id) {
-        return {
-          ...container,
-          items: [...container.items, item],
-        };
+        return setItems(container, [...getItems(container), item]);
       }
 
       return container;

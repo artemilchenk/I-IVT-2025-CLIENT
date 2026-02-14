@@ -1,9 +1,8 @@
-import { type FC, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/constants/router.ts";
 import { DrawerIndexes, DrawerType } from "@/constants/drawer.ts";
 import { useDrawerService } from "@/features/drawer/useDrawer.ts";
-import type { Container } from "@/lib/dnd";
 import { Button } from "@/components/ui/Button.tsx";
 import { DrawerComponent } from "@/features/drawer/ui/DrowerComponent.tsx";
 import { ConfirmPrompt } from "@/components/ConfirmPrompt.tsx";
@@ -11,12 +10,13 @@ import { useGalleryDelete } from "@/modules/gallery/hooks/api/useGalleryDelete.t
 import { useGalleries } from "@/modules/gallery/context.ts";
 import { useQueryClient } from "@tanstack/react-query";
 
-interface Props {
-  container: Container;
+export const GalleryContainer = <TContainer extends { id: string }>({
+  container,
+  children,
+}: {
+  container: TContainer;
   children: ReactNode;
-}
-
-export const GalleryContainer: FC<Props> = ({ container, children }) => {
+}) => {
   const navigate = useNavigate();
   const drawerService = useDrawerService();
   const { isLastOnPage, decrementPageBy, currentPage } = useGalleries();
@@ -55,8 +55,6 @@ export const GalleryContainer: FC<Props> = ({ container, children }) => {
           }}
         />
       </DrawerComponent>
-
-      <h3 className="text-lg font-semibold h-fit">{container.title}</h3>
 
       <div className={"flex-1 overflow-scroll"}>
         <div className="p-5 grid grid-cols-2 gap-3 h-full">{children}</div>

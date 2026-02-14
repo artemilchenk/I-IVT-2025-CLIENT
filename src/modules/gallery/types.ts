@@ -23,7 +23,7 @@ export interface IGalleryCreateResponse extends TBaseGallery {
 export interface PhotoMoveDto {
   id: string;
   targetContainerId: string;
-  optimisticData: IGalleryCreateResponse[];
+  data: IGalleryCreateResponse[];
 }
 
 export interface IGalleriesCreateResponse extends TBaseGallery {

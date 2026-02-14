@@ -1,12 +1,11 @@
 import { useDroppable } from "@dnd-kit/core";
 import type { ReactNode } from "react";
-import type { Container } from "@/lib/dnd/index.tsx";
 
-export function DroppableContainer({
+export function DroppableContainer<TContainer extends { id: string }>({
   container,
   children,
 }: {
-  container: Container;
+  container: TContainer;
   children: ReactNode;
 }) {
   const { setNodeRef, isOver } = useDroppable({
